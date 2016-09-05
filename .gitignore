@@ -3,10 +3,10 @@ node_modules/
 Source/
 Specs/
 ThirdParty/
-Apps/CesiumViewer/
-Apps/SampleData/
-Apps/Sandcastle/
-Apps/TimelineDemo/
+**/CesiumViewer/
+**/SampleData/
+**/Sandcastle/
+**/TimelineDemo/
 /CHANGES.md
 /favicon.ico
 /gulpfile.js
