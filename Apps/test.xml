@@ -61,7 +61,7 @@ end="19">
 <gml:posList>10.0 2.0 0 100 5 10 110.0 30.0 30</gml:posList>
 <mf:Attr>walking,2</mf:Attr>
 </mf:LinearTrajectory>
-<mf:LinearTrajectory gml:id="LT0003" mfIdRef="a" start="15"
+<mf:LinearTrajectory gml:id="LT0003" mfIdRef="a" start="12.333"
 end="19">
 <gml:posList>0 3.0 0 15 10 15 100.0 30.0 30</gml:posList>
 <mf:Attr>walking,2</mf:Attr>

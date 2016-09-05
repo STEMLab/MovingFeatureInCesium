@@ -162,7 +162,7 @@ function play() {
           mfArray[i].object = viewer.entities.add({
               name : mfArray[i].infomation.name,
               ellipsoid : {
-                  radii : new Cesium.Cartesian3(2.0, 2.0, 2.0),
+                  radii : new Cesium.Cartesian3(radii, radii, radii),
                   material : Cesium.Color.RED.withAlpha(0.3)
               }
           });
