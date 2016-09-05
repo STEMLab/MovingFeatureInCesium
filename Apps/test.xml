@@ -63,7 +63,7 @@ end="19">
 </mf:LinearTrajectory>
 <mf:LinearTrajectory gml:id="LT0003" mfIdRef="a" start="15"
 end="19">
-<gml:posList>12.0 3.0 0 15 10 15 100.0 30.0 30</gml:posList>
+<gml:posList>0 3.0 0 15 10 15 100.0 30.0 30</gml:posList>
 <mf:Attr>walking,2</mf:Attr>
 </mf:LinearTrajectory>
 </mf:foliation>

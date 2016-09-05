@@ -1,20 +1,20 @@
 var MovingFeature = function() {
     this.poslist = []; 
     this.infomation;
-    this.start;
-    this.end;
+    this.time = [];
 
-    this.targetPosition = 3;
-    this.timeList = [];
-    this.delta = [];
-    this.mid =[];
+    //this.targetPosition = 3;
+    //this.timeList = [];
+    //this.delta = [];
+    //this.mid =[];
     this.object;
  }
  MovingFeature.prototype.init = function(mf) {
   var mfIdRef = mf.attr("mfIdRef");
-  this.infomation = find(mfIdRef);
-  this.start = mf.attr("start") * 1;
-  this.end = mf.attr("end") * 1;
+  //this.infomation = find(mfIdRef);
+  this.infomation = mfIdRef;
+  this.time[0] = mf.attr("start") * 1;
+  this.time[1] = mf.attr("end") * 1;
   var pointsplit = mf.find("posList").text().split(" ");
 
   for(var i = 0;i < pointsplit.length;i += MovingFeatureMetaData.dimension) {
@@ -26,7 +26,7 @@ var MovingFeature = function() {
     }
   }
 
-  var x = 0, y = 0, z = 0;
+  /*var x = 0, y = 0, z = 0;
   var total = [0];
   var time = this.end - this.start;
   for(var i = 0; i < this.poslist.length - 3; i += 3) {
@@ -51,7 +51,7 @@ var MovingFeature = function() {
   
   this.mid[0] = this.poslist[0];
   this.mid[1] = this.poslist[1];
-  this.mid[2] = this.poslist[2];
+  this.mid[2] = this.poslist[2];*/
  //console.log(this.poslist);
 };
 
@@ -118,11 +118,11 @@ function find(id) {
   }
 }
 function makeFeature(xml) {
-  var meta = new MovingFeatureMetaData();
+  /*var meta = new MovingFeatureMetaData();
   var mfmetaData = $(xml).find("sTBoundedBy");  
-  meta.init(mfmetaData);
+  meta.init(mfmetaData);*/
 
-  var mfinfo = $(xml).find("member");  
+  /*var mfinfo = $(xml).find("member");  
   mfMember = [];
   var membernum = mfinfo.length;
   if (membernum) {                       
@@ -136,8 +136,8 @@ function makeFeature(xml) {
         }
         
       }); 
-  }       
-  
+  }       */
+  MovingFeatureMetaData.dimension = 3;
   mfArray = [];
   var xmlData = $(xml).find("LinearTrajectory");  
   
@@ -156,12 +156,34 @@ function makeFeature(xml) {
 var objectArray = [];
 var time = 0;
 function play() {
+  var start = Cesium.JulianDate.fromDate(new Date(Date.now()));
+  for(var i = 0;i < mfArray.length;i++) {
+        
+          mfArray[i].object = viewer.entities.add({
+              name : mfArray[i].infomation.name,
+              ellipsoid : {
+                  radii : new Cesium.Cartesian3(2.0, 2.0, 2.0),
+                  material : Cesium.Color.RED.withAlpha(0.3)
+              }
+          });
+          var mf =  new Cesium.SampledPositionProperty();
+          for(var j = 0;j < 6;j += 3) {
+            var offset = new Cesium.Cartesian3(mfArray[i].poslist[j], mfArray[i].poslist[j + 1], mfArray[i].poslist[j + 2]);
+            var pos = Cesium.Matrix4.multiplyByPoint(ENU, offset, new Cesium.Cartesian3());
+            
+            var finalPos = Cesium.Ellipsoid.WGS84.cartographicToCartesian(Cesium.Cartographic.fromCartesian(pos, ellipsoid));
+            Cesium.Transforms.eastNorthUpToFixedFrame(finalPos, ellipsoid);
 
-  setInterval(function() {
+            var time = Cesium.JulianDate.addSeconds(start, mfArray[i].time[j / 3], new Cesium.JulianDate());
+            mf.addSample(time, finalPos);
+          }
+          mfArray[i].object.position = mf;
+    }
+  /*setInterval(function() {
     
     update();
     time += timeunit;
-  },timeunit * 1000);
+  },timeunit * 1000);*/
 }
 
 var timeunit = 1;

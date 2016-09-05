@@ -29,6 +29,7 @@
 <body>
     <input type="file" id="fileinput" onchange='readText(this)' >
     <button onclick="read()">movingFeature</button>
+    <button onclick="viewer.zoomTo(viewer.entities);">zoom</button>
   <div id="cesiumContainer"></div>
 
   <script>
@@ -48,6 +49,9 @@
     Cesium.Transforms.eastNorthUpToFixedFrame(position,ellipsoid,ENU);//matrix4
     //Cesium.Matrix4.getRotation(ENU, currentRotation); 
     //Cesium.Matrix4.multiplyByPoint(orientation, ENU , ENU );
+
+
+
 
     var loader = new Loader();
     function readText(that){
