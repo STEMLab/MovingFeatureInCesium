@@ -1,4 +1,4 @@
-var MovingFeature = function() {
+/*var MovingFeature = function() {
     this.poslist = []; 
     this.infomation;
     this.time = [];
@@ -24,8 +24,8 @@ var MovingFeature = function() {
     if(MovingFeatureMetaData.dimension == 3) {
       this.poslist[this.poslist.length - 1] = pointsplit[i + 2] * 1;
     }
-  }
 
+}  */
   /*var x = 0, y = 0, z = 0;
   var total = [0];
   var time = this.end - this.start;
@@ -53,9 +53,9 @@ var MovingFeature = function() {
   this.mid[1] = this.poslist[1];
   this.mid[2] = this.poslist[2];*/
  //console.log(this.poslist);
-};
+//};
 
-var Member = function() {
+/*var Member = function() {
     this.id;
     this.name;
  }
@@ -91,7 +91,7 @@ MovingFeatureMetaData.prototype.init = function(sTBoundedBy) {
     this.upperCorner[this.upperCorner.length - 1] = pointsplit[2] * 1;
   }
   
-};
+};*/
 /*var UserType = function() {
     this.name;
     this.restriction;
@@ -99,7 +99,7 @@ MovingFeatureMetaData.prototype.init = function(sTBoundedBy) {
 UserType.prototype.init = function(jsoncontent) {
 
 };*/
-function read() {
+/*function read() {
 
   $.ajax({
       type: "GET"
@@ -110,19 +110,21 @@ function read() {
           alert("code:"+request.status+"\n"+"error:"+error);
       }
     });
-}
+ 
+  //makeFeature(xml);
+}*/
 
-function find(id) {
+/*function find(id) {
   for(var i = 0;i < mfMember.length;i++) {
     if(id == mfMember[i].id) return mfMember[i];
   }
-}
-function makeFeature(xml) {
-  /*var meta = new MovingFeatureMetaData();
+}*/
+/*function makeFeature(xml) {
+  var meta = new MovingFeatureMetaData();
   var mfmetaData = $(xml).find("sTBoundedBy");  
-  meta.init(mfmetaData);*/
+  meta.init(mfmetaData);
 
-  /*var mfinfo = $(xml).find("member");  
+  var mfinfo = $(xml).find("member");  
   mfMember = [];
   var membernum = mfinfo.length;
   if (membernum) {                       
@@ -136,7 +138,7 @@ function makeFeature(xml) {
         }
         
       }); 
-  }       */
+  }       
   MovingFeatureMetaData.dimension = 3;
   mfArray = [];
   var xmlData = $(xml).find("LinearTrajectory");  
@@ -150,10 +152,62 @@ function makeFeature(xml) {
       }); 
   }                             
   play();
+}*/
+var time = 1000;
+function makeMF(list) {
+  start = Cesium.JulianDate.fromDate(new Date(Date.now()));
+  //start = Cesium.JulianDate.addSeconds(start, 10, new Cesium.JulianDate());
+ // console.log(start);
+  //mfArray = [];
+  for(var j = 0;j < list.length - 1;j += time) {
+   makeonemf(list.slice(j,j + time));
+  }
+  
+  start = Cesium.JulianDate.fromDate(new Date(Date.now()));
+  console.log(start);
+  //play();
 }
+function makeonemf(list) {
+    var mfp =  new Cesium.SampledPositionProperty();
+    var mfid;
+    for(var i = 0;i < time ;i++) {
+      if(list[i] != "" && list[i] !== undefined) {
+        var elements = list[i].split(',');
+        mfid = elements[0];
+        mfp = init(elements,mfp);
+      }
+    }
+    viewer.entities.add({
+        name : mfid,
+        position : mfp,
+        box : {
+            dimensions : new Cesium.Cartesian3(radii, radii, radii),
+            material : Cesium.Color.RED.withAlpha(0.3)
+        }
+    });
+}
+function init(mf,mfp) {
 
+  var poslist = mf[3].split(' ').concat(mf[4].split(' '));
+ 
 
-var objectArray = [];
+ 
+  for(var j = 0;j < 6;j += 3) {
+    var offset = new Cesium.Cartesian3(poslist[j]*0.1, poslist[j + 1]*0.1, poslist[j + 2]*0.1);
+    var pos = Cesium.Matrix4.multiplyByPoint(ENU, offset, new Cesium.Cartesian3());
+    
+    var finalPos = Cesium.Ellipsoid.WGS84.cartographicToCartesian(Cesium.Cartographic.fromCartesian(pos, ellipsoid));
+    Cesium.Transforms.eastNorthUpToFixedFrame(finalPos, ellipsoid);
+
+    var time = Cesium.JulianDate.addSeconds(start, mf[(j / 3) + 1]*1, new Cesium.JulianDate());
+    //console.log(time);
+    mfp.addSample(time, finalPos);
+  }
+
+return mfp;
+  
+}  
+/*var objectArray = [];
 var time = 0;
 function play() {
   var start = Cesium.JulianDate.fromDate(new Date(Date.now()));
@@ -179,14 +233,14 @@ function play() {
           }
           mfArray[i].object.position = mf;
     }
-  /*setInterval(function() {
+  //setInterval(function() {
     
-    update();
-    time += timeunit;
-  },timeunit * 1000);*/
-}
+  //  update();
+  //  time += timeunit;
+  //},timeunit * 1000);
+}*/
 
-var timeunit = 1;
+/*var timeunit = 1;
 var iszoom = false;
 var e = 0.001;
 function update(){
@@ -222,10 +276,10 @@ function update(){
           mfArray[i].targetPosition += 3; 
         }
     }
-    /*if(iszoom) {
+    if(iszoom) {
       viewer.zoomTo(viewer.entities);
       iszoom = false;
-    }*/
+    }
 
-}
+}*/
      

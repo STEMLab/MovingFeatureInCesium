@@ -59,6 +59,18 @@ var Loader = function ( ) {
 
 				break;
 			}
+			case 'csv' : {
+				reader.addEventListener( 'load', function ( event ) {
+
+					var contents = event.target.result;
+
+					var lines = contents.split('\n');
+					//console.log(lines[0]);
+					 makeMF(lines);
+				}, false );
+				reader.readAsText( file );
+				break;
+			}
 			default:
 
 				alert( 'Unsupported file format (' + extension +  ').' );
