@@ -3,9 +3,7 @@ function calCenter(maxmin_xyz) {
       var maxLength = Math.max(boundingBoxLength[0], boundingBoxLength[1], boundingBoxLength[2]);
       scale = 370 / maxLength;
       translate = [-(boundingBoxLength[0] / 2) - maxmin_xyz[3], -(boundingBoxLength[1] / 2) - maxmin_xyz[4], -maxmin_xyz[5]];
-      
-
-  }
+}
 
 function transformCoordinates(myvertices) {
         for (var i = 0; i < myvertices.length / 3; i++) {

@@ -153,9 +153,11 @@ UserType.prototype.init = function(jsoncontent) {
   }                             
   play();
 }*/
+
 var time = 1000;
 function makeMF(list) {
-  start = Cesium.JulianDate.fromDate(new Date(Date.now()));
+  start = new Cesium.JulianDate.fromDate(new Date(Date.now()));
+  end = Cesium.JulianDate.addDays(start,1.0,new Cesium.JulianDate());
   //start = Cesium.JulianDate.addSeconds(start, 10, new Cesium.JulianDate());
  // console.log(start);
   //mfArray = [];
@@ -163,8 +165,8 @@ function makeMF(list) {
    makeonemf(list.slice(j,j + time));
   }
   
-  start = Cesium.JulianDate.fromDate(new Date(Date.now()));
-  console.log(start);
+  var finish = Cesium.JulianDate.fromDate(new Date(Date.now()));
+  console.log(finish);
   //play();
 }
 function makeonemf(list) {

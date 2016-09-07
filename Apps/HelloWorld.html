@@ -28,11 +28,12 @@
   </style>
 </head>
 <body>
-    IndoorGML <input type="file" id="fileinput" onchange='readText(this)' >
-    MovingFeature <input type="file" id="fileinputmf" onchange='readText(this)' >
-    size : <input type="text" id="radii" onchange='radii = this.value' >
+    IndoorGML : <input type="file" id="fileinput" onchange='readText(this)' >
+    MovingFeature : <input type="file" id="fileinputmf" onchange='readText(this)' >
+    MovingFeature size : <input type="text" id="radii" onchange='radii = this.value' >
     <button onclick="viewer.zoomTo(viewer.entities);">zoom</button>
     <button onclick="toggleNetwork();">toggleNetwork</button>
+    <button onclick="restart();">reStart</button>
   <div id="cesiumContainer"></div>
 
   <script>
@@ -64,6 +65,15 @@ camera.position = Cesium.Cartesian3.fromDegrees(127.1034,37.51283,100);
             loader.loadFile(that.files[0]);
         }//end if html5 filelist support
     } 
+    function restart() {
+      viewer.clock.currentTime = start;
+      viewer.clock.startTime = start.clone();
+      viewer.clock.stopTime = Cesium.JulianDate.addDays(start,1.0,new Cesium.JulianDate());
+      viewer.clock.multiplier = 1.0;
+
+      viewer.timeline.updateFromClock();
+      viewer.timeline.zoomTo(viewer.clock.startTime, viewer.clock.stopTime);
+    }
   /*  viewer.canvas.addEventListener('click', function(e){
     var mousePosition = new Cesium.Cartesian2(e.clientX, e.clientY);
 
