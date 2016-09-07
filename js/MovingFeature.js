@@ -190,18 +190,22 @@ function init(mf,mfp) {
 
   var poslist = mf[3].split(' ').concat(mf[4].split(' '));
  
-
- 
+  for(var i = 0;i < 6;i++) {
+    poslist[i] *= 1;
+  }
+ transformCoordinates(poslist);
+ var finalPos = toCartesian3(poslist);
   for(var j = 0;j < 6;j += 3) {
-    var offset = new Cesium.Cartesian3(poslist[j]*0.1, poslist[j + 1]*0.1, poslist[j + 2]*0.1);
+    /*var offset = new Cesium.Cartesian3(poslist[j]*0.1, poslist[j + 1]*0.1, poslist[j + 2]*0.1);
     var pos = Cesium.Matrix4.multiplyByPoint(ENU, offset, new Cesium.Cartesian3());
     
     var finalPos = Cesium.Ellipsoid.WGS84.cartographicToCartesian(Cesium.Cartographic.fromCartesian(pos, ellipsoid));
-    Cesium.Transforms.eastNorthUpToFixedFrame(finalPos, ellipsoid);
+    Cesium.Transforms.eastNorthUpToFixedFrame(finalPos, ellipsoid);*/
+    
 
     var time = Cesium.JulianDate.addSeconds(start, mf[(j / 3) + 1]*1, new Cesium.JulianDate());
     //console.log(time);
-    mfp.addSample(time, finalPos);
+    mfp.addSample(time, finalPos[(j / 3)]);
   }
 
 return mfp;

@@ -52,11 +52,11 @@ function draw(indoor,maxmin_xyz) {
           transformCoordinates(cellboundary[j].geometry[0].points);
           createPolygon(cellboundary[j].geometry[0].points);
         }
-      } /* 
+      } 
     var graphs = indoor.multiLayeredGraph;
 
     for(var i = 0; i < graphs.length; i++){
-        var states = graphs[i].stateMember;
+        /*var states = graphs[i].stateMember;
         for(var j = 0; j < states.length; j++){
             transformCoordinates(states[j].position);
             var result = toCartesian3(states[j].position);
@@ -69,17 +69,16 @@ function draw(indoor,maxmin_xyz) {
                 }
             });
         }*/
-/*
+
         var edges = {};
         var trasitions = graphs[i].transitionMember;
         for(var j = 0; j < trasitions.length; j++){
             transformCoordinates(trasitions[j].line);
             var redTube = viewer.entities.add({
                 name : 'Red tube with rounded corners',
-                polylineVolume : {
+                polyline : {
                     positions : toCartesian3(trasitions[j].line),
-                    shape : computeCircle(60000.0),
-                    material : Cesium.Color.RED
+                    material : Cesium.Color.BLUE
                 }
             });
             console.log(redTube);
@@ -88,7 +87,7 @@ function draw(indoor,maxmin_xyz) {
 
         //NetworkDictionary[graphs[i].graphid] = graph;
 
-    }*/
+    }
     viewer.zoomTo(viewer.entities);
 }
 
