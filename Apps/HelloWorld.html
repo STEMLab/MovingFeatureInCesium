@@ -28,10 +28,11 @@
   </style>
 </head>
 <body>
-    <input type="file" id="fileinput" onchange='readText(this)' >
-    <input type="text" id="radii" onchange='radii = this.value' >
-    <input type="file" id="fileinputmf" onchange='readText(this)' >
+    IndoorGML <input type="file" id="fileinput" onchange='readText(this)' >
+    MovingFeature <input type="file" id="fileinputmf" onchange='readText(this)' >
+    size : <input type="text" id="radii" onchange='radii = this.value' >
     <button onclick="viewer.zoomTo(viewer.entities);">zoom</button>
+    <button onclick="toggleNetwork();">toggleNetwork</button>
   <div id="cesiumContainer"></div>
 
   <script>

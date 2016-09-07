@@ -75,14 +75,16 @@ function draw(indoor,maxmin_xyz) {
         for(var j = 0; j < trasitions.length; j++){
             transformCoordinates(trasitions[j].line);
             var redTube = viewer.entities.add({
-                name : 'Red tube with rounded corners',
+                name : trasitions[j].transitionid,
                 polyline : {
                     positions : toCartesian3(trasitions[j].line),
                     material : Cesium.Color.BLUE
                 }
             });
-            console.log(redTube);
+            edges[trasitions[j].transitionid] = redTube;
+            //console.log(redTube);
         }
+        NetworkDictionary[graphs[i].graphid] = edges;
         //graph.push(edges);
 
         //NetworkDictionary[graphs[i].graphid] = graph;
@@ -90,7 +92,13 @@ function draw(indoor,maxmin_xyz) {
     }
     viewer.zoomTo(viewer.entities);
 }
-
+function toggleNetwork() {
+  for(var gid in NetworkDictionary) {
+    for(var eid in NetworkDictionary[gid]) {
+      NetworkDictionary[gid][eid].show = !NetworkDictionary[gid][eid].show;
+    }
+  }
+}
 function toCartesian3(vertices) {
   
   var result = [];
