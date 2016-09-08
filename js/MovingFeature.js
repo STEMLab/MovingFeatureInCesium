@@ -161,8 +161,31 @@ function makeMF(list) {
   //start = Cesium.JulianDate.addSeconds(start, 10, new Cesium.JulianDate());
  // console.log(start);
   //mfArray = [];
-  for(var j = 0;j < list.length - 1;j += time) {
-   makeonemf(list.slice(j,j + time));
+  var pre = "";
+  var mfid;
+  var mfp;
+  for(var j = 0;j < list.length - 1;j ++) {
+    if(list[j] != "" && list[j] !== undefined) {
+        var elements = list[j].split(',');
+        mfid = elements[0];
+    }
+    if(pre !== mfid){
+      if(pre !== "") {
+         viewer.entities.add({
+            name : mfid,
+            position : mfp,
+            box : {
+                dimensions : new Cesium.Cartesian3(radii, radii, radii),
+                material : Cesium.Color.RED.withAlpha(0.3)
+            }
+        });
+      }
+     
+      pre = mfid;
+      mfp =  new Cesium.SampledPositionProperty();
+      
+    }
+    mfp = init(elements,mfp);
   }
   
   var finish = Cesium.JulianDate.fromDate(new Date(Date.now()));
@@ -170,23 +193,10 @@ function makeMF(list) {
   //play();
 }
 function makeonemf(list) {
-    var mfp =  new Cesium.SampledPositionProperty();
-    var mfid;
     for(var i = 0;i < time ;i++) {
-      if(list[i] != "" && list[i] !== undefined) {
-        var elements = list[i].split(',');
-        mfid = elements[0];
-        mfp = init(elements,mfp);
-      }
+      
     }
-    viewer.entities.add({
-        name : mfid,
-        position : mfp,
-        box : {
-            dimensions : new Cesium.Cartesian3(radii, radii, radii),
-            material : Cesium.Color.RED.withAlpha(0.3)
-        }
-    });
+    
 }
 function init(mf,mfp) {
 
