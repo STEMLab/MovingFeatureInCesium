@@ -13,12 +13,11 @@ function transformCoordinates(myvertices) {
     myvertices[i * 3] = (myvertices[i * 3] +translate[0]) * scale;
     myvertices[i * 3 + 1] = (myvertices[i * 3 + 1] +translate[1]) * scale;
     myvertices[i * 3 + 2] = (myvertices[i * 3 + 2] +translate[2]) * scale;
-  }
 
-  for (var i = 0; i < myvertices.length / 3; i++) {
-      myvertices[i * 3] = Math.floor( myvertices[i * 3] * 1000000000) / 1000000000
-      myvertices[i * 3 + 1] = Math.floor( myvertices[i * 3 + 1] * 1000000000) / 1000000000
-      myvertices[i * 3 + 2] = Math.floor( myvertices[i * 3 + 2] * 1000000000) / 1000000000
+    myvertices[i * 3] = Math.floor( myvertices[i * 3] * 1000000000) / 1000000000
+    myvertices[i * 3 + 1] = Math.floor( myvertices[i * 3 + 1] * 1000000000) / 1000000000
+    myvertices[i * 3 + 2] = Math.floor( myvertices[i * 3 + 2] * 1000000000) / 1000000000
+ 
   }
 }
 function draw(indoor,maxmin_xyz) {
@@ -117,7 +116,7 @@ function toCartesian3(vertices) {
 }
 function createPolygon(exterior,id) {
 
-var bluePolygon = viewer.entities.add({
+viewer.entities.add({
                 name : id,
                 polygon : {
                     hierarchy : toCartesian3(exterior),
@@ -130,7 +129,7 @@ var bluePolygon = viewer.entities.add({
             });
 }
 function createPolygonwithHole(exterior,interior,id) {
-  var bluePolygon = viewer.entities.add({
+viewer.entities.add({
                 name : id,
                 polygon : {
                     hierarchy : {
@@ -145,12 +144,4 @@ function createPolygonwithHole(exterior,interior,id) {
                     outlineWidth : 2.0
                 }
             });
-}
-function computeCircle(radius) {
-    var positions = [];
-    for (var i = 0; i < 360; i++) {
-        var radians = Cesium.Math.toRadians(i);
-        positions.push(new Cesium.Cartesian2(radius * Math.cos(radians), radius * Math.sin(radians)));
-    }
-    return positions;
 }

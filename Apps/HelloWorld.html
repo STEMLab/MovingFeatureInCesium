@@ -19,7 +19,9 @@
 
     <script src="../js/MovingFeature.js"></script>
         <script src="../js/Loader.js"></script>
- 
+ <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+  <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
   <style>
       @import url(../Build/Cesium/Widgets/widgets.css);
       html, body, #cesiumContainer {
@@ -28,16 +30,27 @@
   </style>
 </head>
 <body>
-    IndoorGML : <input type="file" id="fileinput" onchange='readText(this)' >
-    IndoorGML size : <input type="text" id="scale" onchange='userScale = this.value' size="2">
-    MovingFeature : <input type="file" id="fileinputmf" onchange='readText(this)' >
-    MovingFeature size : <input type="text" id="radii" onchange='radii = this.value' size="2">
-    <button onclick="viewer.zoomTo(viewer.entities);">zoom</button>
-    <button onclick="toggleNetwork();">toggleNetwork</button>
-    <button onclick="restart();">reStart</button>
-    tranlate x : <input type="text" id="trans" onchange='x = this.value*1' size="2">
-    tranlate y : <input type="text" id="trans" onchange='y = this.value*1' size="2">
-  <div id="cesiumContainer"></div>
+<div style="background-color:#000000">
+    <label style ="color:white">IndoorGML : <input type="file" id="fileinput" onchange='readText(this)' ></label>
+     <label style ="color:white">MovingFeature : <input type="file" id="fileinputmf" onchange='readText(this)' ></label>
+             <button onclick="viewer.zoomTo(viewer.entities);">zoom</button>
+    <button onclick="toggleNetwork();" >toggleNetwork</button>
+    <button onclick="restart();" >reStart</button>
+    <label style ="color:white">IndoorGML size : <input type="text" id="scale" onchange='userScale = this.value' size="2"></label>
+    "&nbsp; &nbsp; ""&nbsp; &nbsp; ""&nbsp; &nbsp; ""&nbsp; &nbsp; "
+   
+    <label style ="color:white">MovingFeature size :  <input type="text" id="radii" onchange='radii = this.value' size="2"></label>
+   "&nbsp; &nbsp; ""&nbsp; &nbsp; "
+    <label style ="color:white">tranlate x : <input type="text" id="trans" onchange='x = this.value*1' size="2"></label>
+    
+    <label style ="color:white">tranlate y : <input type="text" id="trans" onchange='y = this.value*1' size="2"></label>
+    
+
+
+     </div>      
+                <div id="cesiumContainer"></div>
+
+
 
   <script>
 
