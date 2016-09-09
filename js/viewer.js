@@ -1,23 +1,26 @@
 function calCenter(maxmin_xyz) {
       var boundingBoxLength = [maxmin_xyz[0] - maxmin_xyz[3], maxmin_xyz[1] - maxmin_xyz[4], maxmin_xyz[2] - maxmin_xyz[5]];
       var maxLength = Math.max(boundingBoxLength[0], boundingBoxLength[1], boundingBoxLength[2]);
-      scale = 370 / maxLength;
-      translate = [-(boundingBoxLength[0] / 2) - maxmin_xyz[3], -(boundingBoxLength[1] / 2) - maxmin_xyz[4], -maxmin_xyz[5]];
+      if(userScale == 0) {
+        scale = 370 / maxLength;
+      }else scale = userScale;
+      
+      translate = [-(boundingBoxLength[0] / 2) - maxmin_xyz[3] + x, -(boundingBoxLength[1] / 2) - maxmin_xyz[4] + y, -maxmin_xyz[5]];
 }
 
 function transformCoordinates(myvertices) {
-        for (var i = 0; i < myvertices.length / 3; i++) {
-          myvertices[i * 3] = (myvertices[i * 3] +translate[0]) * scale;
-          myvertices[i * 3 + 1] = (myvertices[i * 3 + 1] +translate[1]) * scale;
-          myvertices[i * 3 + 2] = (myvertices[i * 3 + 2] +translate[2]) * scale;
-      }
+  for (var i = 0; i < myvertices.length / 3; i++) {
+    myvertices[i * 3] = (myvertices[i * 3] +translate[0]) * scale;
+    myvertices[i * 3 + 1] = (myvertices[i * 3 + 1] +translate[1]) * scale;
+    myvertices[i * 3 + 2] = (myvertices[i * 3 + 2] +translate[2]) * scale;
+  }
 
-      for (var i = 0; i < myvertices.length / 3; i++) {
-          myvertices[i * 3] = Math.floor( myvertices[i * 3] * 1000000000) / 1000000000
-          myvertices[i * 3 + 1] = Math.floor( myvertices[i * 3 + 1] * 1000000000) / 1000000000
-          myvertices[i * 3 + 2] = Math.floor( myvertices[i * 3 + 2] * 1000000000) / 1000000000
-      }
-       }
+  for (var i = 0; i < myvertices.length / 3; i++) {
+      myvertices[i * 3] = Math.floor( myvertices[i * 3] * 1000000000) / 1000000000
+      myvertices[i * 3 + 1] = Math.floor( myvertices[i * 3 + 1] * 1000000000) / 1000000000
+      myvertices[i * 3 + 2] = Math.floor( myvertices[i * 3 + 2] * 1000000000) / 1000000000
+  }
+}
 function draw(indoor,maxmin_xyz) {
     calCenter(maxmin_xyz);
     var cells = indoor.primalSpaceFeature;
@@ -30,10 +33,10 @@ function draw(indoor,maxmin_xyz) {
 
             transformCoordinates(surfaces[j].interior);
             if(surfaces[j].interior.length == 0) {
-              createPolygon(surfaces[j].exterior);
+              createPolygon(surfaces[j].exterior,cells[i].cellid);
             }
             else {
-              createPolygonwithHole(surfaces[j].exterior,surfaces[j].interior)
+              createPolygonwithHole(surfaces[j].exterior,surfaces[j].interior,cells[i].cellid)
             }
         }
     }
@@ -43,12 +46,12 @@ function draw(indoor,maxmin_xyz) {
       for(var j = 0; j < cellboundary.length; j++) {
         if(cellboundary[0].geometry[0] instanceof Polygon) {
           transformCoordinates(cellboundary[j].geometry[0].exterior);
-          createPolygon(cellboundary[j].geometry[0].exterior);
+          createPolygon(cellboundary[j].geometry[0].exterior,cellboundary[j].cellBoundaryid);
 
         }
         else {
           transformCoordinates(cellboundary[j].geometry[0].points);
-          createPolygon(cellboundary[j].geometry[0].points);
+          createPolygon(cellboundary[j].geometry[0].points,cellboundary[j].cellBoundaryid);
         }
       } 
     var graphs = indoor.multiLayeredGraph;
@@ -112,11 +115,10 @@ function toCartesian3(vertices) {
   }
   return result;
 }
-function createPolygon(exterior) {
+function createPolygon(exterior,id) {
 
 var bluePolygon = viewer.entities.add({
-                name : 'Blue polygon with holes and outline',
-                //orientation : orientation,
+                name : id,
                 polygon : {
                     hierarchy : toCartesian3(exterior),
                     material : Cesium.Color.BLUE.withAlpha(0.01),
@@ -127,10 +129,9 @@ var bluePolygon = viewer.entities.add({
                 }
             });
 }
-function createPolygonwithHole(exterior,interior) {
+function createPolygonwithHole(exterior,interior,id) {
   var bluePolygon = viewer.entities.add({
-                name : 'Blue polygon with holes and outline',
-                //orientation : orientation,
+                name : id,
                 polygon : {
                     hierarchy : {
 

@@ -29,11 +29,14 @@
 </head>
 <body>
     IndoorGML : <input type="file" id="fileinput" onchange='readText(this)' >
+    IndoorGML size : <input type="text" id="scale" onchange='userScale = this.value' size="2">
     MovingFeature : <input type="file" id="fileinputmf" onchange='readText(this)' >
-    MovingFeature size : <input type="text" id="radii" onchange='radii = this.value' >
+    MovingFeature size : <input type="text" id="radii" onchange='radii = this.value' size="2">
     <button onclick="viewer.zoomTo(viewer.entities);">zoom</button>
     <button onclick="toggleNetwork();">toggleNetwork</button>
     <button onclick="restart();">reStart</button>
+    tranlate x : <input type="text" id="trans" onchange='x = this.value*1' size="2">
+    tranlate y : <input type="text" id="trans" onchange='y = this.value*1' size="2">
   <div id="cesiumContainer"></div>
 
   <script>
@@ -41,7 +44,8 @@
     viewer = new Cesium.Viewer('cesiumContainer');
     radii = 2;
     ellipsoid = viewer.scene.globe.ellipsoid;
-    
+    userScale = 0;
+    x = 0;y = 0;
     ENU = new Cesium.Matrix4();
     position = Cesium.Cartesian3.fromDegrees(127.1034,37.51283,0);
       var currentRotation = new Cesium.Matrix3(); 
