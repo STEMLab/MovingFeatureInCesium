@@ -25,15 +25,18 @@
       html, body, #cesiumContainer {
           width: 100%; height: 100%; margin: 0; padding: 0; overflow: hidden;
       }
+      #cesiumContainer {
+        overflow: auto;
+      }
   </style>
 </head>
 <body>
-    IndoorGML : <input type="file" id="fileinput" onchange='readText(this)' >
+    IndoorGML : <input type="file" id="fileinput" onchange='readText(this)'>
     MovingFeature : <input type="file" id="fileinputmf" onchange='readText(this)' >
     MovingFeature size : <input type="text" id="radii" onchange='radii = this.value' >
     <button onclick="viewer.zoomTo(viewer.entities);">zoom</button>
-    <button onclick="toggleNetwork();">toggleNetwork</button>
-    <button onclick="restart();">reStart</button>
+    <button onclick="toggleNetwork();">toggle network</button>
+    <button onclick="restart();">restart</button>
   <div id="cesiumContainer"></div>
 
   <script>
