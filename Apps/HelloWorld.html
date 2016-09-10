@@ -19,7 +19,8 @@
 
     <script src="../js/MovingFeature.js"></script>
         <script src="../js/Loader.js"></script>
- 
+ <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
   <style>
       @import url(../Build/Cesium/Widgets/widgets.css);
       html, body, #cesiumContainer {
@@ -31,20 +32,39 @@
   </style>
 </head>
 <body>
-    IndoorGML : <input type="file" id="fileinput" onchange='readText(this)'>
-    MovingFeature : <input type="file" id="fileinputmf" onchange='readText(this)' >
-    MovingFeature size : <input type="text" id="radii" onchange='radii = this.value' >
-    <button onclick="viewer.zoomTo(viewer.entities);">zoom</button>
-    <button onclick="toggleNetwork();">toggle network</button>
-    <button onclick="restart();">restart</button>
-  <div id="cesiumContainer"></div>
+
+
+
+<div style="background-color:#000000">
+    <label style ="color:white">IndoorGML : <input type="file" id="fileinput" onchange='readText(this)' text = "file select"></label>
+     <label style ="color:white">MovingFeature : <input type="file" id="fileinputmf" onchange='readText(this)' ></label>
+             <button onclick="viewer.zoomTo(viewer.entities);">zoom</button>
+    <button onclick="toggleNetwork();" >toggle network</button>
+    <button onclick="restart();" >restart</button></br>
+    <label style ="color:white">IndoorGML size : <input type="text" id="scale" onchange='userScale = this.value' size="2"></label>
+    &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; 
+   
+    <label style ="color:white">MovingFeature size :  <input type="text" id="radii" onchange='radii = this.value' size="2"></label>
+   &nbsp; &nbsp; &nbsp; &nbsp; 
+    <label style ="color:white">tranlate x : <input type="text" id="trans" onchange='x = this.value*1' size="2"></label>
+    
+    <label style ="color:white">tranlate y : <input type="text" id="trans" onchange='y = this.value*1' size="2"></label>
+    
+
+
+     </div>      
+                <div id="cesiumContainer"></div>
+
+
+
 
   <script>
 
     viewer = new Cesium.Viewer('cesiumContainer');
     radii = 2;
     ellipsoid = viewer.scene.globe.ellipsoid;
-    
+    userScale = 0;
+    x = 0;y = 0;
     ENU = new Cesium.Matrix4();
     position = Cesium.Cartesian3.fromDegrees(127.1034,37.51283,0);
       var currentRotation = new Cesium.Matrix3(); 

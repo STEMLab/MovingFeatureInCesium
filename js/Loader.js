@@ -65,7 +65,7 @@ var Loader = function ( ) {
 					var contents = event.target.result;
 
 					var lines = contents.split('\n');
-					//console.log(lines[0]);
+					
 					 makeMF(lines);
 				}, false );
 				reader.readAsText( file );
