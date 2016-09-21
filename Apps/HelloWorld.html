@@ -33,10 +33,11 @@
 
 <div style="background-color:#000000">
     <label style ="color:white">IndoorGML : <input type="file" id="fileinput" onchange='readText(this)' text = "file select"></label>
-     <label style ="color:white">MovingFeature : <input type="file" id="fileinputmf" onchange='readText(this)' ></label>
-             <button onclick="viewer.zoomTo(viewer.entities);">zoom</button>
+    <label style ="color:white">MovingFeature : <input type="file" id="fileinputmf" onchange='readText(this)' ></label>
+    <button onclick="restart();" >start</button>
+    <button onclick="viewer.zoomTo(viewer.entities);">zoom</button>
     <button onclick="toggleNetwork();" >toggle network</button>
-    <button onclick="restart();" >restart</button></br>
+
     <label style ="color:white">IndoorGML size : <input type="text" id="scale" onchange='userScale = this.value' size="2"></label>
     &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; 
    
@@ -93,6 +94,7 @@ camera.position = Cesium.Cartesian3.fromDegrees(127.1034,37.51283,100);
       viewer.timeline.updateFromClock();
       viewer.timeline.zoomTo(viewer.clock.startTime, viewer.clock.stopTime);
     }
+
   /*  viewer.canvas.addEventListener('click', function(e){
     var mousePosition = new Cesium.Cartesian2(e.clientX, e.clientY);
 
