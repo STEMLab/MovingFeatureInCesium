@@ -156,36 +156,50 @@ UserType.prototype.init = function(jsoncontent) {
 
 var time = 1000;
 function makeMF(list) {
-  start = new Cesium.JulianDate.fromDate(new Date(Date.now()));
-  end = Cesium.JulianDate.addDays(start,1.0,new Cesium.JulianDate());
+  var metaData = list[0].split(',');console.log(metaData[5]);
+  //start = new Cesium.JulianDate.fromDate(new Date(Date.now()));
+  start = new Cesium.JulianDate.fromIso8601(metaData[5]);
+
+  end = new Cesium.JulianDate.fromIso8601(metaData[6]);
+  var timeunit = metaData[7];
+
+  if(timeunit.substr(0,3) == "sec") {
+    timeunit = 1;
+  }else {timeunit = 0.001;}
+
+
   //start = Cesium.JulianDate.addSeconds(start, 10, new Cesium.JulianDate());
  // console.log(start);
   //mfArray = [];
+  //timeunit = 1;
   var pre = "";
   var mfid;
   var mfp;
-  for(var j = 0;j < list.length - 1;j ++) {
+  for(var j = 2;j < list.length - 1;j ++) {
     if(list[j] != "" && list[j] !== undefined) {
         var elements = list[j].split(',');
         mfid = elements[0];
-    }
-    if(pre !== mfid){
-      if(pre !== "") {
-         viewer.entities.add({
-            name : mfid,
-            position : mfp,
-            box : {
-                dimensions : new Cesium.Cartesian3(radii, radii, radii),
-                material : Cesium.Color.RED.withAlpha(0.3)
-            }
-        });
+    
+      if(pre !== mfid){
+        if(pre !== "") {
+          
+           viewer.entities.add({
+              name : pre,
+              position : mfp,
+              box : {
+                  dimensions : new Cesium.Cartesian3(radii, radii, radii),
+                  material : Cesium.Color.fromBytes(color * 255, color * 255, color * 255, 255)
+              }
+          });
+        }
+       
+        pre = mfid;
+        mfp =  new Cesium.SampledPositionProperty();
+        
       }
-     
-      pre = mfid;
-      mfp =  new Cesium.SampledPositionProperty();
-      
+      mfp = init(elements, mfp, timeunit);
+      var color = elements[4] - 1; 
     }
-    mfp = init(elements,mfp);
   }
   
   var finish = Cesium.JulianDate.fromDate(new Date(Date.now()));
@@ -198,15 +212,16 @@ function makeonemf(list) {
     }
     
 }
-function init(mf,mfp) {
+function init(mf,mfp,timeunit) {
 
-  var poslist = mf[3].split(' ').concat(mf[4].split(' '));
+  var poslist = mf[3].split(' ');
  
   for(var i = 0;i < 6;i++) {
     poslist[i] *= 1;
   }
- transformCoordinates(poslist);
- var finalPos = toCartesian3(poslist);
+  transformCoordinates(poslist);
+  //console.log(poslist);
+  var finalPos = toCartesian3(poslist);
   for(var j = 0;j < 6;j += 3) {
     /*var offset = new Cesium.Cartesian3(poslist[j]*0.1, poslist[j + 1]*0.1, poslist[j + 2]*0.1);
     var pos = Cesium.Matrix4.multiplyByPoint(ENU, offset, new Cesium.Cartesian3());
@@ -215,7 +230,7 @@ function init(mf,mfp) {
     Cesium.Transforms.eastNorthUpToFixedFrame(finalPos, ellipsoid);*/
     
 
-    var time = Cesium.JulianDate.addSeconds(start, mf[(j / 3) + 1]*1, new Cesium.JulianDate());
+    var time = Cesium.JulianDate.addSeconds(start, mf[(j / 3) + 1]*timeunit, new Cesium.JulianDate());
     //console.log(time);
     mfp.addSample(time, finalPos[(j / 3)]);
   }
