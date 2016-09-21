@@ -37,10 +37,10 @@
              <button onclick="viewer.zoomTo(viewer.entities);">zoom</button>
     <button onclick="toggleNetwork();" >toggle network</button>
     <button onclick="restart();" >restart</button></br>
-    <label style ="color:white">IndoorGML size : <input type="text" id="scale" onchange='userScale = this.value' size="2"></label>
+    <label style ="color:white">IndoorGML size : <input type="text" id="scale" onchange='userScale = this.value*1' size="2"></label>
     &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; 
    
-    <label style ="color:white">MovingFeature size :  <input type="text" id="radii" onchange='radii = this.value' size="2"></label>
+    <label style ="color:white">MovingFeature size :  <input type="text" id="radii" onchange='radii = this.value*1' size="2"></label>
    &nbsp; &nbsp; &nbsp; &nbsp; 
     <label style ="color:white">tranlate x : <input type="text" id="trans" onchange='x = this.value*1' size="2"></label>
     
