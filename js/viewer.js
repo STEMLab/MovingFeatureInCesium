@@ -21,6 +21,8 @@ function transformCoordinates(myvertices) {
   }
 }
 function draw(indoor,maxmin_xyz) {
+  console.log("before draw");
+console.log(new Date(Date.now()));
     calCenter(maxmin_xyz);
     var cells = indoor.primalSpaceFeature;
     
@@ -39,7 +41,8 @@ function draw(indoor,maxmin_xyz) {
             }
         }
     }
-
+console.log("draw cell finish");
+console.log(new Date(Date.now()));
   var cellboundary = indoor.cellSpaceBoundaryMember;
     
       for(var j = 0; j < cellboundary.length; j++) {
@@ -53,6 +56,8 @@ function draw(indoor,maxmin_xyz) {
           createPolygon(cellboundary[j].geometry[0].points,cellboundary[j].cellBoundaryid);
         }
       } 
+      console.log("draw boundary finish");
+console.log(new Date(Date.now()));
     var graphs = indoor.multiLayeredGraph;
 
     for(var i = 0; i < graphs.length; i++){
@@ -90,7 +95,11 @@ function draw(indoor,maxmin_xyz) {
         //NetworkDictionary[graphs[i].graphid] = graph;
 
     }
+    console.log("draw transition finish");
+console.log(new Date(Date.now()));
     viewer.zoomTo(viewer.entities);
+    console.log("draw transition finish");
+console.log(new Date(Date.now()));
 }
 function toggleNetwork() {
   for(var gid in NetworkDictionary) {

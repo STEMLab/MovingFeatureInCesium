@@ -8,7 +8,8 @@ var Loader = function ( ) {
 	this.texturePath = '';
 
 	this.loadFile = function ( file ) {
-
+		console.log("loadFile");
+console.log(new Date(Date.now()));
 		var filename = file.name;
 		var extension = filename.split( '.' ).pop().toLowerCase();
 
@@ -34,7 +35,8 @@ var Loader = function ( ) {
 
 				//var socket = io.connect();
 				reader.addEventListener( 'load', function ( event ) {
-
+					console.log("gml file load finish");
+					console.log(new Date(Date.now()));
 					var contents = event.target.result;
 
 					var indoorgmlLoader = new IndoorGMLLoader();
@@ -44,11 +46,14 @@ var Loader = function ( ) {
 					//var worker = require('webworkify')(require('./loader/IndoorGMLLoader.js'));
 					//worker.addEventListener('message', function (ev) {
 					 	console.log("receive json!!");
+
+						console.log(new Date(Date.now()));
 						var indoor = new Indoor();
 						//var maxmin_xyz = indoor.init(ev.data);
 						var maxmin_xyz = indoor.init(data);
 						console.log("init indoorfeature!!");
 
+						console.log(new Date(Date.now()));
 						//var ic = new SetIndoorGMLCommand();
 						//ic.makeGeometry(indoor,maxmin_xyz);
 					draw(indoor,maxmin_xyz);
@@ -65,7 +70,8 @@ var Loader = function ( ) {
 					var contents = event.target.result;
 
 					var lines = contents.split('\n');
-					
+					console.log("csv load finish");
+					console.log(new Date(Date.now()));
 					 makeMF(lines);
 				}, false );
 				reader.readAsText( file );

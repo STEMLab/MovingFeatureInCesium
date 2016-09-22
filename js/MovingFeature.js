@@ -175,14 +175,17 @@ function makeMF(list) {
   var pre = "";
   var mfid;
   var mfp;
+  var color;
+  console.log("metadate setting finish");
+console.log(new Date(Date.now()));
   for(var j = 2;j < list.length - 1;j ++) {
     if(list[j] != "" && list[j] !== undefined) {
         var elements = list[j].split(',');
         mfid = elements[0];
-    
+
       if(pre !== mfid){
         if(pre !== "") {
-          
+        
            viewer.entities.add({
               name : pre,
               position : mfp,
@@ -198,12 +201,20 @@ function makeMF(list) {
         
       }
       mfp = init(elements, mfp, timeunit);
-      var color = elements[4] - 1; 
+      color = elements[4] - 1; 
     }
   }
-  
-  var finish = Cesium.JulianDate.fromDate(new Date(Date.now()));
-  console.log(finish);
+  viewer.entities.add({
+      name : pre,
+      position : mfp,
+      box : {
+          dimensions : new Cesium.Cartesian3(radii, radii, radii),
+          material : Cesium.Color.fromBytes(color * 255, color * 255, color * 255, 255)
+      }
+  });
+ // var finish = Cesium.JulianDate.fromDate(new Date(Date.now()));
+  console.log("mf finish");
+  console.log(new Date(Date.now()));
   //play();
 }
 function makeonemf(list) {
