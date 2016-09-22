@@ -129,7 +129,7 @@ viewer.entities.add({
                 name : id,
                 polygon : {
                     hierarchy : toCartesian3(exterior),
-                    material : Cesium.Color.BLUE.withAlpha(0.01),
+                    material : Cesium.Color.BLUE.withAlpha(0.15),
                     perPositionHeight : true,
                     outline : true,
                     outlineColor : Cesium.Color.BLACK.withAlpha(0.1),
