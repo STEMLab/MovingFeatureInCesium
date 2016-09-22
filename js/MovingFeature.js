@@ -156,7 +156,7 @@ UserType.prototype.init = function(jsoncontent) {
 
 var time = 1000;
 function makeMF(list) {
-  var metaData = list[0].split(',');console.log(metaData[5]);
+  var metaData = list[0].split(',');//console.log(metaData[5]);
   //start = new Cesium.JulianDate.fromDate(new Date(Date.now()));
   start = new Cesium.JulianDate.fromIso8601(metaData[5]);
 
