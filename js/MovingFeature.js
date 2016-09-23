@@ -191,13 +191,13 @@ console.log(new Date(Date.now()));
               position : mfp,
               point : {
                 pixelSize : 5,
-              color : Cesium.Color.fromBytes(color * 255, color * 255, color * 255, 128)//,
-              //outlineColor : Cesium.Color.WHITE,
-              //outlineWidth : 1
+                color : Cesium.Color.fromBytes(color * 60, color * 60, color * 60, 128),
+                outlineColor : Cesium.Color.WHITE,
+                outlineWidth : 1
               }
               //box : {
               //    dimensions : new Cesium.Cartesian3(radii, radii, radii),
-              //    material : Cesium.Color.fromBytes(color * 255, color * 255, color * 255, 255)
+              //    material : Cesium.Color.fromBytes(color * 60, color * 60, color * 60, 128)
               //}
           });
         }
@@ -207,7 +207,7 @@ console.log(new Date(Date.now()));
         
       }
       mfp = init(elements, mfp, timeunit);
-      color = elements[4] - 1; 
+      color = elements[4]; 
     }
   }
   viewer.entities.add({
@@ -215,13 +215,13 @@ console.log(new Date(Date.now()));
       position : mfp,
       point : {
                 pixelSize : 5,
-              color : Cesium.Color.fromBytes(color * 255, color * 255, color * 255, 128)//,
-              //outlineColor : Cesium.Color.WHITE,
-              //outlineWidth : 2
+              color : Cesium.Color.fromBytes(color * 60, color * 60, color * 60, 128),
+              outlineColor : Cesium.Color.WHITE,
+              outlineWidth : 2
               }
       //box : {
       //    dimensions : new Cesium.Cartesian3(radii, radii, radii),
-      //    material : Cesium.Color.fromBytes(color * 255, color * 255, color * 255, 255)
+      //    material : Cesium.Color.fromBytes(color * 60, color * 60, color * 60, 128)
       //}
   });
  // var finish = Cesium.JulianDate.fromDate(new Date(Date.now()));

@@ -130,7 +130,7 @@ function addToPrimitive(polygons ,polylines) {
                             geometryInstances : polygons,
                             appearance : new Cesium.MaterialAppearance({
                               material : Cesium.Material.fromType('Color', {
-                                          color : new Cesium.Color(0.0, 0.0, 1.0, 0.02)
+                                          color : new Cesium.Color(0.0, 0.0, 1.0, 0.03)
                                         })
                             })
   }));
