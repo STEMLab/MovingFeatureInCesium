@@ -189,10 +189,16 @@ console.log(new Date(Date.now()));
            viewer.entities.add({
               name : pre,
               position : mfp,
-              box : {
-                  dimensions : new Cesium.Cartesian3(radii, radii, radii),
-                  material : Cesium.Color.fromBytes(color * 255, color * 255, color * 255, 255)
+              point : {
+                pixelSize : 5,
+              color : Cesium.Color.fromBytes(color * 255, color * 255, color * 255, 128)//,
+              //outlineColor : Cesium.Color.WHITE,
+              //outlineWidth : 1
               }
+              //box : {
+              //    dimensions : new Cesium.Cartesian3(radii, radii, radii),
+              //    material : Cesium.Color.fromBytes(color * 255, color * 255, color * 255, 255)
+              //}
           });
         }
        
@@ -207,10 +213,16 @@ console.log(new Date(Date.now()));
   viewer.entities.add({
       name : pre,
       position : mfp,
-      box : {
-          dimensions : new Cesium.Cartesian3(radii, radii, radii),
-          material : Cesium.Color.fromBytes(color * 255, color * 255, color * 255, 255)
-      }
+      point : {
+                pixelSize : 5,
+              color : Cesium.Color.fromBytes(color * 255, color * 255, color * 255, 128)//,
+              //outlineColor : Cesium.Color.WHITE,
+              //outlineWidth : 2
+              }
+      //box : {
+      //    dimensions : new Cesium.Cartesian3(radii, radii, radii),
+      //    material : Cesium.Color.fromBytes(color * 255, color * 255, color * 255, 255)
+      //}
   });
  // var finish = Cesium.JulianDate.fromDate(new Date(Date.now()));
   console.log("mf finish");

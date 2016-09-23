@@ -25,7 +25,8 @@ function draw(indoor,maxmin_xyz) {
 console.log(new Date(Date.now()));
     calCenter(maxmin_xyz);
     var cells = indoor.primalSpaceFeature;
-    
+    group = [];
+    groupline = [];
     for(var i = 0; i < cells.length; i++) {
         var surfaces = cells[i].geometry;
         for(var j = 0; j < surfaces.length; j++) {
@@ -41,6 +42,7 @@ console.log(new Date(Date.now()));
             }
         }
     }
+    
 console.log("draw cell finish");
 console.log(new Date(Date.now()));
   var cellboundary = indoor.cellSpaceBoundaryMember;
@@ -49,15 +51,15 @@ console.log(new Date(Date.now()));
         if(cellboundary[0].geometry[0] instanceof Polygon) {
           transformCoordinates(cellboundary[j].geometry[0].exterior);
           createPolygon(cellboundary[j].geometry[0].exterior,cellboundary[j].cellBoundaryid);
-
         }
         else {
           transformCoordinates(cellboundary[j].geometry[0].points);
           createPolygon(cellboundary[j].geometry[0].points,cellboundary[j].cellBoundaryid);
         }
       } 
+      addToPrimitive(group,groupline);
       console.log("draw boundary finish");
-console.log(new Date(Date.now()));
+      console.log(new Date(Date.now()));
     var graphs = indoor.multiLayeredGraph;
 
     for(var i = 0; i < graphs.length; i++){
@@ -98,7 +100,7 @@ console.log(new Date(Date.now()));
     console.log("draw transition finish");
 console.log(new Date(Date.now()));
     viewer.zoomTo(viewer.entities);
-    console.log("draw transition finish");
+    console.log("zoom finish");
 console.log(new Date(Date.now()));
 }
 function toggleNetwork() {
@@ -123,22 +125,66 @@ function toCartesian3(vertices) {
   }
   return result;
 }
+function addToPrimitive(polygons ,polylines) {
+   viewer.scene.primitives.add(new Cesium.Primitive({
+                            geometryInstances : polygons,
+                            appearance : new Cesium.MaterialAppearance({
+                              material : Cesium.Material.fromType('Color', {
+                                          color : new Cesium.Color(0.0, 0.0, 1.0, 0.02)
+                                        })
+                            })
+  }));
+  viewer.scene.primitives.add(new Cesium.Primitive({
+                            geometryInstances : polylines,
+                            appearance : new Cesium.MaterialAppearance({
+                              material : Cesium.Material.fromType('Color', {
+                                          color : new Cesium.Color(0.0, 0.0, 0.0, 0.1)
+                                        })
+                            })
+  }));
+}
 function createPolygon(exterior,id) {
 
-viewer.entities.add({
+/*viewer.entities.add({
                 name : id,
                 polygon : {
                     hierarchy : toCartesian3(exterior),
-                    material : Cesium.Color.BLUE.withAlpha(0.15),
+                    material : Cesium.Color.BLUE.withAlpha(0.01),
                     perPositionHeight : true,
                     outline : true,
                     outlineColor : Cesium.Color.BLACK.withAlpha(0.1),
                     outlineWidth : 2.0
                 }
-            });
+            });*/
+  var instance = new Cesium.GeometryInstance({
+                      geometry : new Cesium.PolygonGeometry({
+                                    polygonHierarchy : new Cesium.PolygonHierarchy(
+                                      toCartesian3(exterior)
+                                    ),
+                                    //material : Cesium.Color.BLUE.withAlpha(0.01),
+                                    perPositionHeight : true
+                                    //outline : true,
+                                    //outlineColor : Cesium.Color.BLACK.withAlpha(0.1),
+                                    //outlineWidth : 2.0
+                                })
+                    })
+  var instance2 = new Cesium.GeometryInstance({
+                      geometry : new Cesium.PolygonOutlineGeometry({
+                                    polygonHierarchy : new Cesium.PolygonHierarchy(
+                                      toCartesian3(exterior)
+                                    ),
+                                    //material : Cesium.Color.BLUE.withAlpha(0.01),
+                                    perPositionHeight : true
+                                    //outline : true,
+                                    //outlineColor : Cesium.Color.BLACK.withAlpha(0.1),
+                                    //outlineWidth : 2.0
+                                })
+                    })
+  group.push(instance);
+  groupline.push(instance2);
 }
 function createPolygonwithHole(exterior,interior,id) {
-viewer.entities.add({
+/*viewer.entities.add({
                 name : id,
                 polygon : {
                     hierarchy : {
@@ -146,11 +192,37 @@ viewer.entities.add({
                         positions : toCartesian3(exterior),
                         holes : toCartesian3(interior)
                     },
-                    material : Cesium.Color.BLUE.withAlpha(0.1),
+                    material : Cesium.Color.BLUE.withAlpha(0.01),
                     perPositionHeight : true,
                     outline : true,
                     outlineColor : Cesium.Color.BLACK,
                     outlineWidth : 2.0
                 }
-            });
+            });*/
+  var instance = new Cesium.GeometryInstance({
+                      geometry : new Cesium.PolygonGeometry({
+                                    polygonHierarchy : new Cesium.PolygonHierarchy(
+                                      toCartesian3(exterior),[toCartesian3(interior)]
+                                    ),
+                                    //material : Cesium.Color.BLUE.withAlpha(0.01),
+                                    perPositionHeight : true
+                                    //outline : true,
+                                    //outlineColor : Cesium.Color.BLACK.withAlpha(0.1),
+                                    //outlineWidth : 2.0
+                                })
+                    })
+  var instance2 = new Cesium.GeometryInstance({
+                      geometry : new Cesium.PolygonOutlineGeometry({
+                                    polygonHierarchy : new Cesium.PolygonHierarchy(
+                                      toCartesian3(exterior),[toCartesian3(interior)]
+                                    ),
+                                    //material : Cesium.Color.BLUE.withAlpha(0.01),
+                                    perPositionHeight : true
+                                    //outline : true,
+                                    //outlineColor : Cesium.Color.BLACK.withAlpha(0.1),
+                                    //outlineWidth : 2.0
+                                })
+                    })
+  group.push(instance);
+  groupline.push(instance2);
 }
