@@ -117,7 +117,7 @@ camera.position = Cesium.Cartesian3.fromDegrees(127.1034,37.51283,100);
       
     }
     function controlLine(id,alpha) {
-      var attributes = viewer.scene.primitives._primitives[0].getGeometryInstanceAttributes(id);
+      var attributes = viewer.scene.primitives._primitives[1].getGeometryInstanceAttributes(id);
       attributes.color = Cesium.ColorGeometryInstanceAttribute.toValue(Cesium.Color.BLACK.withAlpha(alpha));
     }
     function changecolor(color, checked) {
@@ -129,6 +129,7 @@ camera.position = Cesium.Cartesian3.fromDegrees(127.1034,37.51283,100);
            attributes.color = Cesium.ColorGeometryInstanceAttribute.toValue(Cesium.Color.GREEN.withAlpha(alpha));
         }
         for(var id in roomline) {
+          //console.log(id);
            controlLine(id,alpha);
            //var attributes = viewer.scene.primitives._primitives[0].getGeometryInstanceAttributes(id);
            // attributes.color = Cesium.ColorGeometryInstanceAttribute.toValue(Cesium.Color.BLACK.withAlpha(alpha));

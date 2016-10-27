@@ -154,7 +154,7 @@ function addToPrimitive(polygons ,polylines) {
   }));
 }
 function createPolygon(exterior,id,color) {
-var lineID = id + 'line';
+var lineID = id + "l";
   var instance = new Cesium.GeometryInstance({
                       geometry : new Cesium.PolygonGeometry({
                                     polygonHierarchy : new Cesium.PolygonHierarchy(
@@ -197,7 +197,7 @@ var lineID = id + 'line';
   groupline.push(instance2);
 }
 function createPolygonwithHole(exterior,interior,id,color) {
- var lineID = id + 'line';
+ var lineID = id + "l";
   var instance = new Cesium.GeometryInstance({
                       geometry : new Cesium.PolygonGeometry({
                                     polygonHierarchy : new Cesium.PolygonHierarchy(
