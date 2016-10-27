@@ -138,8 +138,8 @@ camera.position = Cesium.Cartesian3.fromDegrees(127.1034,37.51283,100);
               var tempcolor;
               if(ControlVisible[id][i][1] == 1) tempcolor = Cesium.Color.GREEN.withAlpha(Index[id] * 0.1);
               else if(ControlVisible[id][i][1] == 2)tempcolor = Cesium.Color.VIOLET.withAlpha(Index[id] * 0.1);
-              else if(ControlVisible[id][i][1] == 3)tempcolor = Cesium.Color.YELLOW.withAlpha(Index[id] * 0.1);
-              else if(ControlVisible[id][i][1] == 4)tempcolor = Cesium.Color.WHITE.withAlpha(Index[id] * 0.1);
+              else if(ControlVisible[id][i][1] == 3)tempcolor = Cesium.Color.YELLOW.withAlpha(Index[id]);
+              else if(ControlVisible[id][i][1] == 4)tempcolor = Cesium.Color.WHITE.withAlpha(Index[id]);
               attributes.color = Cesium.ColorGeometryInstanceAttribute.toValue(tempcolor);
             }
           for(var i = 0;i < ControlVisibleLine[id].length;i++ ) {
