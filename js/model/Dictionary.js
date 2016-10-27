@@ -10,7 +10,7 @@ var TransitionInformation = {}; //transtions
 var BoundaryInformation = {};
 var GmlIdMap = {};
 var viewer;
-var IS = [room,corridor,stair,door];
+
 var stair = {};
 var door = {};
 var room = {};
@@ -20,3 +20,8 @@ var stairline = {};
 var doorline = {};
 var roomline = {};
 var corridorline = {};
+
+var ControlVisible = {};
+var ControlVisibleLine = {};
+var Index = {};
+var preIndex = {};

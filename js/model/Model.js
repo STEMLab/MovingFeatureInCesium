@@ -109,6 +109,7 @@ var CellSpace = function() {
 	this.geometry = []; //Polygon array
 	this.duality = "";
 	this.type = 0;
+	this.floor = 0;
 	this.partialboundedBy;//boundarysurface
 }
 CellSpace.prototype.init = function(jsoncontent, maxmin_xyz) {
@@ -116,11 +117,14 @@ CellSpace.prototype.init = function(jsoncontent, maxmin_xyz) {
 
 	var description = jsoncontent.description;
 	if(typeof description !== 'undefined') {
-		description = description.value.split(":")[0].split("=")[1];
-		if(description == 'Room') this.type = 1;
-		else if(description == 'Corridor') this.type = 2;
-		else if(description == 'Stair') this.type = 3;
-		else if(description == 'Door') this.type = 4;
+		var attribute = description.value.split(":");
+		var spacetype = attribute[0].split("=")[1];
+		if(spacetype == 'Room') this.type = 1;
+		else if(spacetype == 'Corridor') this.type = 2;
+		else if(spacetype == 'Stair') this.type = 3;
+		else if(spacetype == 'Door') this.type = 4;
+
+		this.floor = attribute[2].split("=")[1]*1;
 	}
 	var n = jsoncontent.name;
 	if(typeof n !== 'undefined') {

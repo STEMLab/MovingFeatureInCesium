@@ -1,11 +1,11 @@
 function calCenter(maxmin_xyz) {
-      var boundingBoxLength = [maxmin_xyz[0] - maxmin_xyz[3], maxmin_xyz[1] - maxmin_xyz[4], maxmin_xyz[2] - maxmin_xyz[5]];
-      var maxLength = Math.max(boundingBoxLength[0], boundingBoxLength[1], boundingBoxLength[2]);
-      if(userScale == 0) {
-        scale = 370 / maxLength;
-      }else scale = userScale;
-      
-      translate = [-(boundingBoxLength[0] / 2) - maxmin_xyz[3] + x, -(boundingBoxLength[1] / 2) - maxmin_xyz[4] + y, -maxmin_xyz[5]];
+  var boundingBoxLength = [maxmin_xyz[0] - maxmin_xyz[3], maxmin_xyz[1] - maxmin_xyz[4], maxmin_xyz[2] - maxmin_xyz[5]];
+  var maxLength = Math.max(boundingBoxLength[0], boundingBoxLength[1], boundingBoxLength[2]);
+  if(userScale == 0) {
+    scale = 370 / maxLength;
+  }else scale = userScale;
+  
+  translate = [-(boundingBoxLength[0] / 2) - maxmin_xyz[3] + x, -(boundingBoxLength[1] / 2) - maxmin_xyz[4] + y, -maxmin_xyz[5]];
 }
 
 function transformCoordinates(myvertices) {
@@ -22,29 +22,30 @@ function transformCoordinates(myvertices) {
 }
 function draw(indoor,maxmin_xyz) {
   console.log("before draw");
-console.log(new Date(Date.now()));
-    calCenter(maxmin_xyz);
-    var cells = indoor.primalSpaceFeature;
-    group = [];
-    groupline = [];
+  console.log(new Date(Date.now()));
+  calCenter(maxmin_xyz);
+  var cells = indoor.primalSpaceFeature;
+  group = [];
+  groupline = [];
 
-    colors = [Cesium.Color.BLUE.withAlpha(0.1),Cesium.Color.GREEN.withAlpha(0.1),Cesium.Color.VIOLET.withAlpha(0.1),Cesium.Color.YELLOW.withAlpha(1),Cesium.Color.WHITE.withAlpha(1)];
-    for(var i = 0; i < cells.length; i++) {
-        var surfaces = cells[i].geometry;
-        var type = cells[i].type;
-        for(var j = 0; j < surfaces.length; j++) {
+  colors = [Cesium.Color.BLUE.withAlpha(0.1),Cesium.Color.GREEN.withAlpha(0.1),Cesium.Color.VIOLET.withAlpha(0.1),Cesium.Color.YELLOW.withAlpha(1),Cesium.Color.WHITE.withAlpha(1)];
+  for(var i = 0; i < cells.length; i++) {
+      var surfaces = cells[i].geometry;
+      var type = cells[i].type;
+      var floor = cells[i].floor;
+      for(var j = 0; j < surfaces.length; j++) {
 
-            transformCoordinates(surfaces[j].exterior);
+          transformCoordinates(surfaces[j].exterior);
 
-            transformCoordinates(surfaces[j].interior);
-            if(surfaces[j].interior.length == 0) {
-              createPolygon(surfaces[j].exterior,surfaces[j].polyonid,type);
-            }
-            else {
-              createPolygonwithHole(surfaces[j].exterior,surfaces[j].interior,surfaces[j].polyonid,type)
-            }
-        }
-    }
+          transformCoordinates(surfaces[j].interior);
+          if(surfaces[j].interior.length == 0) {
+            createPolygon(surfaces[j].exterior, surfaces[j].polyonid, type, floor);
+          }
+          else {
+            createPolygonwithHole(surfaces[j].exterior, surfaces[j].interior, surfaces[j].polyonid, type, floor)
+          }
+      }
+  }
     
  /*console.log("draw cell finish");
 console.log(new Date(Date.now()));
@@ -102,10 +103,10 @@ console.log(new Date(Date.now()));
 
     }
     console.log("draw transition finish");
-console.log(new Date(Date.now()));
+    console.log(new Date(Date.now()));
     viewer.zoomTo(viewer.entities);
     console.log("zoom finish");
-console.log(new Date(Date.now()));
+    console.log(new Date(Date.now()));
 }
 function toggleNetwork() {
   return function() {
@@ -133,7 +134,7 @@ function toCartesian3(vertices) {
   return result;
 }
 function addToPrimitive(polygons ,polylines) {
-  console.log(polygons);
+  //console.log(polygons);
    viewer.scene.primitives.add(new Cesium.Primitive({
                             geometryInstances : polygons,
                              appearance : new Cesium.PerInstanceColorAppearance()
@@ -153,7 +154,7 @@ function addToPrimitive(polygons ,polylines) {
                             //})
   }));
 }
-function createPolygon(exterior,id,color) {
+function createPolygon(exterior,id,color,floor) {
 var lineID = id + "l";
   var instance = new Cesium.GeometryInstance({
                       geometry : new Cesium.PolygonGeometry({
@@ -189,14 +190,26 @@ var lineID = id + "l";
                                 },
                       id : lineID
                     })
-  if(color == 1) {room[id] = instance;roomline[lineID] = instance2;}
+  if(Index[floor] === undefined) {
+    Index[floor] = 0;
+    ControlVisible[floor] = new Array();
+    ControlVisibleLine[floor] = new Array();
+    preIndex[floor] = 1;
+  }
+  //console.log(floor);
+  //console.log(Index);
+  //console.log(ControlVisible);
+  ControlVisible[floor][Index[floor]] = [id, color];
+  ControlVisibleLine[floor][Index[floor]] = lineID;
+  Index[floor]++;
+  /*if(color == 1) {room[id] = instance;roomline[lineID] = instance2;}
   else if(color == 2) {corridor[id] = instance;corridorline[lineID] = instance2;}
   else if(color == 3) {stair[id] = instance;stairline[lineID] = instance2;}
-  else if(color == 4) {door[id] = instance;doorline[lineID] = instance2;}
+  else if(color == 4) {door[id] = instance;doorline[lineID] = instance2;}*/
   group.push(instance);
   groupline.push(instance2);
 }
-function createPolygonwithHole(exterior,interior,id,color) {
+function createPolygonwithHole(exterior,interior,id,color,floor) {
  var lineID = id + "l";
   var instance = new Cesium.GeometryInstance({
                       geometry : new Cesium.PolygonGeometry({
@@ -224,10 +237,18 @@ function createPolygonwithHole(exterior,interior,id,color) {
                                 },
                       id : lineID
                     })
-  if(color == 1) {room[id] = instance;roomline[lineID] = instance2;}
+  if(Index[floor] === undefined) {
+    Index[floor] = 0;
+    ControlVisible[floor] = new Array();
+    ControlVisibleLine[floor] = new Array();
+  }
+  ControlVisible[floor][Index[floor]] = [id, color];
+  ControlVisibleLine[floor][Index[floor]] = lineID;
+  Index[floor] ++;
+  /*if(color == 1) {room[id] = instance;roomline[lineID] = instance2;}
   else if(color == 2) {corridor[id] = instance;corridorline[lineID] = instance2;}
   else if(color == 3) {stair[id] = instance;stairline[lineID] = instance2;}
-  else if(color == 4) {door[id] = instance;doorline[lineID] = instance2;}
+  else if(color == 4) {door[id] = instance;doorline[lineID] = instance2;}*/
   group.push(instance);
   groupline.push(instance2);
 }
