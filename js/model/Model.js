@@ -105,15 +105,25 @@ LineString.prototype.init = function(jsoncontent, maxmin_xyz) {
 }
 var CellSpace = function() {
 	this.cellid;
-	this.cellname ="";
+	this.cellname = "";
 	this.geometry = []; //Polygon array
-	this.duality ="";
+	this.duality = "";
+	this.type = 0;
 	this.partialboundedBy;//boundarysurface
 }
 CellSpace.prototype.init = function(jsoncontent, maxmin_xyz) {
 	this.cellid = jsoncontent.id;
+
+	var description = jsoncontent.description;
+	if(typeof description !== 'undefined') {
+		description = description.value.split(":")[0].split("=")[1];
+		if(description == 'Room') this.type = 1;
+		else if(description == 'Corridor') this.type = 2;
+		else if(description == 'Stair') this.type = 3;
+		else if(description == 'Door') this.type = 4;
+	}
 	var n = jsoncontent.name;
-	if(typeof n !=='undefined') {
+	if(typeof n !== 'undefined') {
 		this.cellname = n[0].value;
 	}
 

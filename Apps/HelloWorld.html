@@ -9,35 +9,48 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no">
   <title>Hello World!</title>
   <script src="../Build/Cesium/Cesium.js"></script>
-   <script src='../js/libs/jquery-1.8.0.min.js' type='text/javascript'></script>
-    <script src="../js/loader/IndoorGMLLoader.js"></script>
-
+  <script src='../js/libs/jquery-1.8.0.min.js' type='text/javascript'></script>
+  <script src="../js/loader/IndoorGMLLoader.js"></script>
+  <script type="text/javascript" src="Sandcastle/Sandcastle-header.js"></script>
     <!-- Model -->
-    <script src='../js/model/Dictionary.js' type='text/javascript'></script>
-    <script src='../js/model/Model.js' type='text/javascript'></script>
-    <script src="../js/viewer.js"></script>
+  <script src='../js/model/Dictionary.js' type='text/javascript'></script>
+  <script src='../js/model/Model.js' type='text/javascript'></script>
+  <script src="../js/viewer.js"></script>
 
-    <script src="../js/MovingFeature.js"></script>
-        <script src="../js/Loader.js"></script>
-  <style>
+  <script src="../js/MovingFeature.js"></script>
+  <script src="../js/Loader.js"></script>
+  <!--<style>
       @import url(../Build/Cesium/Widgets/widgets.css);
       html, body, #cesiumContainer {
           width: 100%; height: 100%; margin: 0; padding: 0; overflow: auto;
       }
 
-  </style>
+  </style>-->
+  <style>
+    @import url(Sandcastle/templates/bucket.css);
+     #toolbar {
+        background: rgba(42, 42, 42, 0.8);
+        padding: 2px;
+        border-radius: 4px;
+    }
+    #toolbar input {
+        vertical-align: middle;
+        padding-top: 2px;
+        padding-bottom: 2px;
+    }
+</style>
 </head>
 <body>
 
 
-
-<div style="background-color:#000000">
-    <label style ="color:white">IndoorGML : <input type="file" id="fileinput" onchange='readText(this)' text = "file select"></label>
-    <label style ="color:white">MovingFeature : <input type="file" id="fileinputmf" onchange='readText(this)' ></label>
-    <button onclick="restart();" >start</button>
+<div id="cesiumContainer" class="fullSize"></div>
+<div  id ="toolbar">
+    <label style ="color:white">IndoorGML : <input type="file" id="fileinput" onchange='readText(this)' text = "file select"></label></br>
+    <label style ="color:white">MovingFeature : <input type="file" id="fileinputmf" onchange='readText(this)' ></label></br>
+    <!--<button onclick="restart();" >start</button>
     <button onclick="viewer.zoomTo(viewer.entities);">zoom</button>
-    <button onclick="toggleNetwork();" >toggle network</button></br>
-    <label style ="color:white">IndoorGML size : <input type="text" id="scale" onchange='userScale = this.value' size="2"></label>
+    <button onclick="toggleNetwork();" >toggle network</button></br>-->
+   <!-- <label style ="color:white">IndoorGML size : <input type="text" id="scale" onchange='userScale = this.value' size="2"></label>
 
     &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; 
    
@@ -45,18 +58,21 @@
    &nbsp; &nbsp; &nbsp; &nbsp; 
     <label style ="color:white">tranlate x : <input type="text" id="trans" onchange='x = this.value*1' size="2"></label>
     
-    <label style ="color:white">tranlate y : <input type="text" id="trans" onchange='y = this.value*1' size="2"></label>
-    
-
+    <label style ="color:white">tranlate y : <input type="text" id="trans" onchange='y = this.value*1' size="2"></label>-->
+    <label style ="color:white"><input type="checkbox" id="stair" checked = 'true' onchange ='changecolor(3,this.checked)'>stair</label>
+    <label style ="color:white"><input type="checkbox" id="room" checked = 'true' onchange ='changecolor(1,this.checked)'>room</label>
+    <label style ="color:white"><input type="checkbox" id="corridor" checked = 'true' onchange ='changecolor(2,this.checked)'>corridor</label>
+    <label style ="color:white"><input type="checkbox" id="door" checked = 'true' onchange ='changecolor(4,this.checked)'>door</label></br>
 
      </div>      
-                <div id="cesiumContainer"></div>
+                
 
 
 
 
   <script>
-
+    Sandcastle.addToolbarButton('toggle network', toggleNetwork());
+    Sandcastle.addToolbarButton('start', restart());
     viewer = new Cesium.Viewer('cesiumContainer');
     viewer.scene.scene3DOnly = true;
     radii = 1;
@@ -89,16 +105,65 @@ camera.position = Cesium.Cartesian3.fromDegrees(127.1034,37.51283,100);
         }//end if html5 filelist support
     } 
     function restart() {
-      viewer.clock.currentTime = start;
-      viewer.clock.startTime = start.clone();
-      viewer.clock.stopTime = Cesium.JulianDate.addDays(start,1.0,new Cesium.JulianDate());
-      viewer.clock.multiplier = 1.0;
+      return function(){
+        viewer.clock.currentTime = start;
+        viewer.clock.startTime = start.clone();
+        viewer.clock.stopTime = Cesium.JulianDate.addDays(start,1.0,new Cesium.JulianDate());
+        viewer.clock.multiplier = 1.0;
 
-      viewer.timeline.updateFromClock();
-      viewer.timeline.zoomTo(viewer.clock.startTime, viewer.clock.stopTime);
+        viewer.timeline.updateFromClock();
+        viewer.timeline.zoomTo(viewer.clock.startTime, viewer.clock.stopTime);
+      };
+      
+    }
+    function controlLine(id,alpha) {
+      var attributes = viewer.scene.primitives._primitives[0].getGeometryInstanceAttributes(id);
+      attributes.color = Cesium.ColorGeometryInstanceAttribute.toValue(Cesium.Color.BLACK.withAlpha(alpha));
+    }
+    function changecolor(color, checked) {
+      var alpha = 0;
+      if(checked) alpha = 0.2;
+      if(color == 1) {
+        for(var id in room) {
+           var attributes = viewer.scene.primitives._primitives[0].getGeometryInstanceAttributes(id);
+           attributes.color = Cesium.ColorGeometryInstanceAttribute.toValue(Cesium.Color.GREEN.withAlpha(alpha));
+        }
+        for(var id in roomline) {
+           controlLine(id,alpha);
+           //var attributes = viewer.scene.primitives._primitives[0].getGeometryInstanceAttributes(id);
+           // attributes.color = Cesium.ColorGeometryInstanceAttribute.toValue(Cesium.Color.BLACK.withAlpha(alpha));
+        }
+      }
+      else if(color == 2) {
+        for(var id in corridor) {
+           var attributes = viewer.scene.primitives._primitives[0].getGeometryInstanceAttributes(id);
+           attributes.color = Cesium.ColorGeometryInstanceAttribute.toValue(Cesium.Color.VIOLET.withAlpha(alpha));
+        }
+        for(var id in corridorline) {
+           controlLine(id,alpha);
+        }
+      }
+      else if(color == 3) {
+        for(var id in stair) {
+           var attributes = viewer.scene.primitives._primitives[0].getGeometryInstanceAttributes(id);
+           attributes.color = Cesium.ColorGeometryInstanceAttribute.toValue(Cesium.Color.YELLOW.withAlpha(alpha));
+        }
+        for(var id in stairline) {
+           controlLine(id,alpha);
+        }
+      }
+      else if(color == 4){
+        for(var id in door) {
+           var attributes = viewer.scene.primitives._primitives[0].getGeometryInstanceAttributes(id);
+           attributes.color = Cesium.ColorGeometryInstanceAttribute.toValue(Cesium.Color.WHITE.withAlpha(alpha));
+        }
+        for(var id in doorline) {
+           controlLine(id,alpha);
+        }
+      }
     }
 
-  /*  viewer.canvas.addEventListener('click', function(e){
+  /*viewer.canvas.addEventListener('click', function(e){
     var mousePosition = new Cesium.Cartesian2(e.clientX, e.clientY);
 
     var ellipsoid = viewer.scene.globe.ellipsoid;

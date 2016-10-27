@@ -10,3 +10,13 @@ var TransitionInformation = {}; //transtions
 var BoundaryInformation = {};
 var GmlIdMap = {};
 var viewer;
+var IS = [room,corridor,stair,door];
+var stair = {};
+var door = {};
+var room = {};
+var corridor = {};
+
+var stairline = {};
+var doorline = {};
+var roomline = {};
+var corridorline = {};

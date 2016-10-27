@@ -177,7 +177,7 @@ function makeMF(list) {
   var mfp;
   var color;
   console.log("metadate setting finish");
-console.log(new Date(Date.now()));
+  console.log(new Date(Date.now()));
   for(var j = 2;j < list.length - 1;j ++) {
     if(list[j] != "" && list[j] !== undefined) {
         var elements = list[j].split(',');
