@@ -87,11 +87,11 @@ console.log(new Date(Date.now()));
 							makeonemft(row);
 						}
 						index ++;
-						console.log("Row:", row.data);
+						//console.log("Row:", row.data);
 					},
 					complete: function() {
 						complete();
-						console.log("All done!");
+						//console.log("All done!");
 					}
 				});
 				break;
