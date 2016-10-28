@@ -234,6 +234,7 @@ console.log("metadate setting finish");
   var mfid;
   var mfp;
   var color;
+  var realcolor;
 function makeonemft(list) {
 
   
@@ -250,8 +251,8 @@ function makeonemft(list) {
               position : mfp,
               point : {
                 pixelSize : 5,
-                color : Cesium.Color.fromBytes(color * 60, color * 60, color * 60, 255),
-                outlineColor : Cesium.Color.fromBytes(color * 60, color * 60, color * 60, 255),
+                color : realcolor,
+                outlineColor : realcolor,
                 outlineWidth : 1
               }
               //box : {
@@ -266,7 +267,20 @@ function makeonemft(list) {
         
       }
       mfp = init(elements, mfp, timeunit);
-      color = elements[4]; 
+      color = elements[4] * 1; 
+      if(color == 1) {
+        realcolor = Cesium.Color.WHITE;
+      }
+      else if(color == 2) {
+        realcolor = Cesium.Color.RED;
+      }
+      else if(color == 3) {
+        realcolor = Cesium.Color.BLUE;
+      }
+      else if(color == 4) {
+        realcolor = Cesium.Color.GREEN;
+      }
+
     //}
   
   
@@ -277,8 +291,8 @@ function complete() {
       position : mfp,
       point : {
                 pixelSize : 5,
-              color : Cesium.Color.fromBytes(color * 60, color * 60, color * 60, 128),
-              outlineColor : Cesium.Color.WHITE,
+              color : realcolor,
+              outlineColor : realcolor,
               outlineWidth : 2
               }
       //box : {
