@@ -48,7 +48,7 @@ console.log(new Date(Date.now()));
 					 	console.log("receive json!!");
 
 						console.log(new Date(Date.now()));
-						var indoor = new Indoor();
+						indoor = new Indoor();
 						//var maxmin_xyz = indoor.init(ev.data);
 						var maxmin_xyz = indoor.init(data);
 						console.log("init indoorfeature!!");

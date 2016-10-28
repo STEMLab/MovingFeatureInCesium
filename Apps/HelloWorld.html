@@ -101,7 +101,10 @@ camera.position = Cesium.Cartesian3.fromDegrees(127.1034,37.51283,100);
 
     var loader = new Loader();
     function readText(that){
-
+        if(startMF == 1) {
+          viewer.entities.removeAll();
+          drawTransition(indoor);
+        }
         if(that.files && that.files[0]){
             loader.loadFile(that.files[0]);
         }//end if html5 filelist support

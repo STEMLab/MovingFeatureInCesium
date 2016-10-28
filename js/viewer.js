@@ -97,16 +97,31 @@ console.log(new Date(Date.now()));
             //console.log(redTube);
         }
         NetworkDictionary[graphs[i].graphid] = edges;
-        //graph.push(edges);
-
-        //NetworkDictionary[graphs[i].graphid] = graph;
-
     }
     console.log("draw transition finish");
     console.log(new Date(Date.now()));
     viewer.zoomTo(viewer.entities);
     console.log("zoom finish");
     console.log(new Date(Date.now()));
+}
+function drawTransition(indoor) {
+  var graphs = indoor.multiLayeredGraph;
+  for(var i = 0; i < graphs.length; i++){
+      var edges = {};
+      var trasitions = graphs[i].transitionMember;
+      for(var j = 0; j < trasitions.length; j++){
+         // transformCoordinates(trasitions[j].line);
+          var redTube = viewer.entities.add({
+              name : trasitions[j].transitionid,
+              polyline : {
+                  positions : toCartesian3(trasitions[j].line),
+                  material : Cesium.Color.AQUAMARINE.withAlpha(1)
+              }
+          });
+          edges[trasitions[j].transitionid] = redTube;
+      }
+      NetworkDictionary[graphs[i].graphid] = edges;
+    }
 }
 function toggleNetwork() {
   return function() {

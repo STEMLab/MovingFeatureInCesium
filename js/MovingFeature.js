@@ -153,13 +153,13 @@ UserType.prototype.init = function(jsoncontent) {
   }                             
   play();
 }*/
-
+var startMF = 0;
 var time = 1000;
 function makeMF(list) {
   var metaData = list[0].split(',');//console.log(metaData[5]);
   //start = new Cesium.JulianDate.fromDate(new Date(Date.now()));
   start = new Cesium.JulianDate.fromIso8601(metaData[5]);
-
+  startMF = 1;
   end = new Cesium.JulianDate.fromIso8601(metaData[6]);
   var timeunit = metaData[7];
 
