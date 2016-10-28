@@ -65,7 +65,7 @@ console.log(new Date(Date.now()));
 				break;
 			}
 			case 'csv' : {
-				reader.addEventListener( 'load', function ( event ) {
+				/*reader.addEventListener( 'load', function ( event ) {
 
 					var contents = event.target.result;
 
@@ -74,7 +74,26 @@ console.log(new Date(Date.now()));
 					console.log(new Date(Date.now()));
 					 makeMF(lines);
 				}, false );
-				reader.readAsText( file );
+				reader.readAsText( file );*/
+				var index = 0;
+				Papa.parse(file, {
+					download: true,
+					step: function(row) {
+						if(index == 0) {
+							makeMF(row);
+
+						}
+						else if(index > 1) {
+							makeonemft(row);
+						}
+						index ++;
+						console.log("Row:", row.data);
+					},
+					complete: function() {
+						complete();
+						console.log("All done!");
+					}
+				});
 				break;
 			}
 			default:

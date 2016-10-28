@@ -156,23 +156,24 @@ UserType.prototype.init = function(jsoncontent) {
 var startMF = 0;
 var time = 1000;
 function makeMF(list) {
-  var metaData = list[0].split(',');//console.log(metaData[5]);
+  var metaData = list.data[0];//.split(',');//console.log(metaData[5]);
   //start = new Cesium.JulianDate.fromDate(new Date(Date.now()));
   start = new Cesium.JulianDate.fromIso8601(metaData[5]);
   startMF = 1;
   end = new Cesium.JulianDate.fromIso8601(metaData[6]);
-  var timeunit = metaData[7];
+  timeunit = metaData[7];
 
   if(timeunit.substr(0,3) == "sec") {
     timeunit = 1;
   }else {timeunit = 0.001;}
 
-
+console.log("metadate setting finish");
+  console.log(new Date(Date.now()));
   //start = Cesium.JulianDate.addSeconds(start, 10, new Cesium.JulianDate());
  // console.log(start);
   //mfArray = [];
   //timeunit = 1;
-  var pre = "";
+  /*var pre = "";
   var mfid;
   var mfp;
   var color;
@@ -191,8 +192,8 @@ function makeMF(list) {
               position : mfp,
               point : {
                 pixelSize : 5,
-                color : Cesium.Color.fromBytes(color * 60, color * 60, color * 60, 128),
-                outlineColor : Cesium.Color.WHITE,
+                color : Cesium.Color.fromBytes(color * 60, color * 60, color * 60, 255),
+                outlineColor : Cesium.Color.fromBytes(color * 60, color * 60, color * 60, 255),
                 outlineWidth : 1
               }
               //box : {
@@ -226,14 +227,68 @@ function makeMF(list) {
   });
  // var finish = Cesium.JulianDate.fromDate(new Date(Date.now()));
   console.log("mf finish");
-  console.log(new Date(Date.now()));
+  console.log(new Date(Date.now()));*/
   //play();
 }
-function makeonemf(list) {
-    for(var i = 0;i < time ;i++) {
-      
-    }
-    
+  var pre = "";
+  var mfid;
+  var mfp;
+  var color;
+function makeonemft(list) {
+
+  
+
+    //if(list != "" && list !== undefined) {
+        var elements = list.data[0];//list.split(',');
+        mfid = elements[0];
+
+      if(pre !== mfid){
+        if(pre !== "") {
+        
+           viewer.entities.add({
+              name : pre,
+              position : mfp,
+              point : {
+                pixelSize : 5,
+                color : Cesium.Color.fromBytes(color * 60, color * 60, color * 60, 255),
+                outlineColor : Cesium.Color.fromBytes(color * 60, color * 60, color * 60, 255),
+                outlineWidth : 1
+              }
+              //box : {
+              //    dimensions : new Cesium.Cartesian3(radii, radii, radii),
+              //    material : Cesium.Color.fromBytes(color * 60, color * 60, color * 60, 128)
+              //}
+          });
+        }
+       
+        pre = mfid;
+        mfp =  new Cesium.SampledPositionProperty();
+        
+      }
+      mfp = init(elements, mfp, timeunit);
+      color = elements[4]; 
+    //}
+  
+  
+}
+function complete() {
+  viewer.entities.add({
+      name : pre,
+      position : mfp,
+      point : {
+                pixelSize : 5,
+              color : Cesium.Color.fromBytes(color * 60, color * 60, color * 60, 128),
+              outlineColor : Cesium.Color.WHITE,
+              outlineWidth : 2
+              }
+      //box : {
+      //    dimensions : new Cesium.Cartesian3(radii, radii, radii),
+      //    material : Cesium.Color.fromBytes(color * 60, color * 60, color * 60, 128)
+      //}
+  });
+ // var finish = Cesium.JulianDate.fromDate(new Date(Date.now()));
+  console.log("mf finish");
+  console.log(new Date(Date.now()));
 }
 function init(mf,mfp,timeunit) {
 
