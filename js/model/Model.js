@@ -123,7 +123,7 @@ CellSpace.prototype.init = function(jsoncontent, maxmin_xyz) {
 		else if(spacetype == 'Corridor') this.type = 2;
 		else if(spacetype == 'Stair') this.type = 3;
 		else if(spacetype == 'Door') this.type = 4;
-		if(attribute.size > 2)
+		if(attribute.length > 2)
 			this.floor = attribute[2].split("=")[1]*1;
 	}
 	var n = jsoncontent.name;
