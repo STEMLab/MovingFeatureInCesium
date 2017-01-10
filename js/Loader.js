@@ -3,18 +3,11 @@
  */
 
 var Loader = function ( ) {
-
-
 	this.texturePath = '';
-
 	this.loadFile = function ( file ) {
-		console.log("loadFile");
-console.log(new Date(Date.now()));
 		var filename = file.name;
 		var extension = filename.split( '.' ).pop().toLowerCase();
-
 		var reader = new FileReader();
-
 		/*reader.addEventListener( 'progress', function ( event ) {
 
 			var size = '(' + Math.floor( event.total / 1000 ).format() + ' KB)';
@@ -22,59 +15,33 @@ console.log(new Date(Date.now()));
 			console.log( 'Loading', filename, size, progress );
 
 		} );*/
-
 		switch ( extension ) {
-
 			case 'gml': {
-
 				var inlineWorkerText =
     			"self.addEventListener('message', function(e) { postMessage(e); } ,false);"
 				;
-
-
-
-				//var socket = io.connect();
 				reader.addEventListener( 'load', function ( event ) {
 					console.log("gml file load finish");
 					console.log(new Date(Date.now()));
 					var contents = event.target.result;
-
 					var indoorgmlLoader = new IndoorGMLLoader();
-
 					var data = indoorgmlLoader.unmarshal(contents);
 					//console.log(data);
 					//var worker = require('webworkify')(require('./loader/IndoorGMLLoader.js'));
 					//worker.addEventListener('message', function (ev) {
 					 	console.log("receive json!!");
-
 						console.log(new Date(Date.now()));
 						indoor = new Indoor();
 						//var maxmin_xyz = indoor.init(ev.data);
 						var maxmin_xyz = indoor.init(data);
-						console.log("init indoorfeature!!");
-
-						console.log(new Date(Date.now()));
-						//var ic = new SetIndoorGMLCommand();
-						//ic.makeGeometry(indoor,maxmin_xyz);
 					draw(indoor,maxmin_xyz);
 					//});
 					//worker.postMessage(contents);	
 				}, false );
 				reader.readAsText( file );
-
 				break;
 			}
 			case 'csv' : {
-				/*reader.addEventListener( 'load', function ( event ) {
-
-					var contents = event.target.result;
-
-					var lines = contents.split('\n');
-					console.log("csv load finish");
-					console.log(new Date(Date.now()));
-					 makeMF(lines);
-				}, false );
-				reader.readAsText( file );*/
 				var index = 0;
 				Papa.parse(file, {
 					download: true,
@@ -87,22 +54,50 @@ console.log(new Date(Date.now()));
 							makeonemft(row);
 						}
 						index ++;
-						//console.log("Row:", row.data);
 					},
 					complete: function() {
 						complete();
-						//console.log("All done!");
 					}
 				});
 				break;
 			}
-			default:
+			case 'txt' : {//test
+				solidtocsv = "id, geom\n";
+				group = [];
+  				groupline = [];
+				Papa.parse(file, {
+					download: true,
+					delimiter: " ",
+					header: false,
+					step: function(row) {
+						if(row.data[0])
+						drawMultiSurface(row.data[0]);
+					},
+					complete: function() {
+						showInCesium(group,groupline);
+						viewer.entities.add({
+		                position: new Cesium.Cartesian3.fromDegrees(127.101914, 37.462066, 28.068607),
+		                point : {
+			                pixelSize : 5,
+			                color : Cesium.Color.fromBytes(255, 255, 255, 255)
+			              }
+		            	});
+			            viewer.zoomTo(viewer.entities);
+			            var blob = new Blob([solidtocsv], {type: "text/plain;charset=utf-8"});
+						saveAs(blob, "boxs.csv");
+					}
+				});
+				break;
+			}
+			default: {
 
 				alert( 'Unsupported file format (' + extension +  ').' );
 
 				break;
+				}
 
 		}
 
 	};
+
 };

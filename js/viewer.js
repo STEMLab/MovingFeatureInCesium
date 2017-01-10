@@ -27,7 +27,7 @@ function draw(indoor,maxmin_xyz) {
   var cells = indoor.primalSpaceFeature;
   group = [];
   groupline = [];
-
+  HilightCell = [];
   colors = [Cesium.Color.BLUE.withAlpha(0.1),Cesium.Color.GREEN.withAlpha(0.1),Cesium.Color.VIOLET.withAlpha(0.1),Cesium.Color.YELLOW.withAlpha(1),Cesium.Color.WHITE.withAlpha(1)];
   for(var i = 0; i < cells.length; i++) {
       var surfaces = cells[i].geometry;
@@ -223,6 +223,7 @@ var lineID = id + "l";
   else if(color == 4) {door[id] = instance;doorline[lineID] = instance2;}*/
   group.push(instance);
   groupline.push(instance2);
+  return instance;
 }
 function createPolygonwithHole(exterior,interior,id,color,floor) {
  var lineID = id + "l";
@@ -266,4 +267,5 @@ function createPolygonwithHole(exterior,interior,id,color,floor) {
   else if(color == 4) {door[id] = instance;doorline[lineID] = instance2;}*/
   group.push(instance);
   groupline.push(instance2);
+  return instance;
 }

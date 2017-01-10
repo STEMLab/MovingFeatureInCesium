@@ -19,6 +19,9 @@
   <script src="../js/viewer.js"></script>
 
   <script src="../js/MovingFeature.js"></script>
+  <script src="../js/test.js"></script>
+  <!-- <script src="../filewrite.js"></script>-->
+      <script async="" src="https://cdn.rawgit.com/eligrey/FileSaver.js/e9d941381475b5df8b7d7691013401e171014e89/FileSaver.min.js"/></script>
   <script src="../js/Loader.js"></script>
   <!--<style>
       @import url(../Build/Cesium/Widgets/widgets.css);
@@ -49,7 +52,11 @@
     <label style ="color:white">IndoorGML : <input type="file" id="fileinput" onchange='readText(this)' text = "file select"></label></br>
     <label style ="color:white">MovingFeature : <input type="file" id="fileinputmf" onchange='readText(this)' ></label></br>
     <label style ="color:white">floor list : <input type="text" id="floor" size="2"></label>
-     <button onclick="enableFloor()">view</button>
+     <button onclick="enableFloor()">view</button></br>
+     <label style ="color:white">url : <input type="text" id="url" size="8"></label>
+     <label style ="color:white">query type name : <input type="text" id="qtype" size="4"></label>
+     <label style ="color:white">box envelope : <input type="text" id="box" size="10"></label>
+     <button onclick="requestWFS()">request</button></br>
     <!--<button onclick="restart();" >start</button>
     <button onclick="viewer.zoomTo(viewer.entities);">zoom</button>
     <button onclick="toggleNetwork();" >toggle network</button></br>-->
@@ -78,6 +85,29 @@
     Sandcastle.addToolbarButton('toggle network', toggleNetwork());
     Sandcastle.addToolbarButton('start', restart());
 
+    postDataMETA1 = "<wfs:GetFeature service=\"WFS3D\" version=\"1.0.0\"" +
+ "outputFormat=\"JSON\"" +
+ "xmlns:topp=\"http://www.openplans.org/topp\"" +
+ "xmlns:wfs=\"http://www.opengis.net/wfs\"" +
+ "xmlns:ogc=\"http://www.opengis.net/ogc\"" +
+ "xmlns:gml=\"http://www.opengis.net/gml\"" +
+ "xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"" +
+ "xsi:schemaLocation=\"http://www.opengis.net/wfs\"" +
+  "                   http://schemas.opengis.net/wfs/1.0.0/WFS-basic.xsd\">" +
+ "<wfs:Query typeName=\"";
+    postDataMETA2 = "\">" +
+ "  <ogc:PropertyName>topp:id</ogc:PropertyName>" +
+ "  <ogc:Filter>" +
+"<ogc:BBOX>" +
+"       <ogc:PropertyName>topp:geom</ogc:PropertyName>" +
+"       <gml:Box srsName=\"http://www.opengis.net/gml/srs/epsg.xml#4327\">" +
+"          <gml:coordinates>";
+    postDataMETA3 = "</gml:coordinates>" +
+"       </gml:Box>" +
+"     </ogc:BBOX>" +
+"  </ogc:Filter>" +
+" </wfs:Query>" +
+"</wfs:GetFeature>"; 
     viewer = new Cesium.Viewer('cesiumContainer');
     viewer.scene.scene3DOnly = true;
     radii = 1;
@@ -88,21 +118,35 @@
     translate = [0, 0, 0];
     ENU = new Cesium.Matrix4();
     position = Cesium.Cartesian3.fromDegrees(127.1034,37.51283,0);
-      var currentRotation = new Cesium.Matrix3(); 
+      //var currentRotation = new Cesium.Matrix3(); 
       var angle = 0.48;
       orientation  = new Cesium.Matrix4(Math.cos(angle),-Math.sin(angle),0,0,
-                                    Math.sin(angle), Math.cos(angle),0,0,
-                                    0,0,1,0,
-                                    0,0,0,1);
+                                   Math.sin(angle), Math.cos(angle),0,0,
+                                  0,0,1,0,
+                                 0,0,0,1);
     Cesium.Transforms.eastNorthUpToFixedFrame(position,ellipsoid,ENU);//matrix4
     //Cesium.Matrix4.getRotation(ENU, currentRotation); 
-    //Cesium.Matrix4.multiplyByPoint(orientation, ENU , ENU );
+    Cesium.Matrix4.multiplyByPoint(orientation, ENU , ENU );
 
 
 var camera = new Cesium.Camera(viewer.scene);
 camera.position = Cesium.Cartesian3.fromDegrees(127.1034,37.51283,100);
 
     var loader = new Loader();
+    function requestWFS() {
+      var qtype = document.getElementById("qtype").value
+      var envelope = document.getElementById("box").value
+      var req = new XMLHttpRequest();
+      req.open("POST", document.getElementById("url").value, true);
+      req.setRequestHeader('User-Agent', 'XMLHTTP/1.0');
+      req.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+      req.onreadystatechange = function () {
+        if (this.readyState == 4 && this.status == 200) {
+          alert(this.responseText);
+        }
+      }
+      req.send(postDataMETA1 + qtype + postDataMETA2 + envelope + postDataMETA3);
+    }
     function readText(that){
         if(startMF == 1) {
           viewer.entities.removeAll();
@@ -163,7 +207,7 @@ camera.position = Cesium.Cartesian3.fromDegrees(127.1034,37.51283,100);
       for(var id in Index) {
         if(Index[id] != preIndex[id]) {
           for(var i = 0;i < ControlVisible[id].length;i++ ) {
-              var attributes = viewer.scene.primitives._primitives[0].getGeometryInstanceAttributes( ControlVisible[id][i][0]);
+              var attributes = viewer.scene.primitives._primitives[1].getGeometryInstanceAttributes( ControlVisible[id][i][0]);
               var tempcolor;
               if(ControlVisible[id][i][1] == 1) tempcolor = Cesium.Color.GREEN.withAlpha(Index[id] * 0.1);
               else if(ControlVisible[id][i][1] == 2)tempcolor = Cesium.Color.VIOLET.withAlpha(Index[id] * 0.1);
@@ -172,7 +216,7 @@ camera.position = Cesium.Cartesian3.fromDegrees(127.1034,37.51283,100);
               attributes.color = Cesium.ColorGeometryInstanceAttribute.toValue(tempcolor);
             }
           for(var i = 0;i < ControlVisibleLine[id].length;i++ ) {
-            var attributes = viewer.scene.primitives._primitives[1].getGeometryInstanceAttributes( ControlVisibleLine[id][i]);
+            var attributes = viewer.scene.primitives._primitives[2].getGeometryInstanceAttributes( ControlVisibleLine[id][i]);
             attributes.color = Cesium.ColorGeometryInstanceAttribute.toValue(Cesium.Color.BLACK.withAlpha(Index[id] * 0.2));
           }
           preIndex[id] = Index[id];
