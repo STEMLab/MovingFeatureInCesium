@@ -198,21 +198,22 @@ camera.position = Cesium.Cartesian3.fromDegrees(127.1034,37.51283,100);
       req.onreadystatechange = function () {
         if (this.readyState == 4 && this.status == 200) {
           var response = this.responseText;
-          var responseJSON = JSON.parse(response);
+          if(response != undefined) {
+            var responseJSON = JSON.parse(response);
 
-          var features = responseJSON.features;
-          for (k in features) {
-              var f = features[k];
-              var id = f.properties.id;
-              idList.push(id);
-          }
+            var features = responseJSON.features;
+            for (k in features) {
+                var f = features[k];
+                var id = f.properties.id;
+                idList.push(id);
+            }
 
-          for(id in idList) {
-            var polygons = HilightCell[id];
-            console.log(polygons);
-            for(p in polygons) {
-              var attributes = viewer.scene.primitives._primitives[0].getGeometryInstanceAttributes( p );
-              attributes.color = Cesium.ColorGeometryInstanceAttribute.toValue(Cesium.Color.YELLOW.withAlpha(1));
+            for(id in idList) {
+              var polygons = HilightCell[ idList[id] ];
+              for(p in polygons) {
+                var attributes = viewer.scene.primitives._primitives[1].getGeometryInstanceAttributes( polygons[p] );
+                attributes.color = Cesium.ColorGeometryInstanceAttribute.toValue(Cesium.Color.YELLOW.withAlpha(1));
+              }
             }
           }
 
@@ -236,9 +237,9 @@ camera.position = Cesium.Cartesian3.fromDegrees(127.1034,37.51283,100);
 
     function clearHighLight() {
       for(id in idList) {
-        var polygons = HilightCell[id];
+        var polygons = HilightCell[ idList[id] ];
         for(p in polygons) {
-          var attributes = viewer.scene.primitives._primitives[0].getGeometryInstanceAttributes( p );
+          var attributes = viewer.scene.primitives._primitives[1].getGeometryInstanceAttributes( polygons[p] );
           attributes.color = Cesium.ColorGeometryInstanceAttribute.toValue(Cesium.Color.BLUE.withAlpha(1));
         }
       }
