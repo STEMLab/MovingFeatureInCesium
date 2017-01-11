@@ -81,7 +81,7 @@ function showInCesium(polygons ,polylines) {
                             appearance : new Cesium.PerInstanceColorAppearance()
   }));
 }
-function createPolygonforbbox(exterior) {
+function createPolygonforbbox(exterior,id) {
   var instance = new Cesium.GeometryInstance({
                       geometry : new Cesium.PolygonGeometry({
                                     polygonHierarchy : new Cesium.PolygonHierarchy(
@@ -91,7 +91,8 @@ function createPolygonforbbox(exterior) {
                                 }),
                       attributes : {
                         color : Cesium.ColorGeometryInstanceAttribute.fromColor(Cesium.Color.WHITE.withAlpha(0.8))
-                                }
+                                },
+                      id : id
                     })
  /*var instance2 = new Cesium.GeometryInstance({
                       geometry : new Cesium.PolygonOutlineGeometry({

@@ -165,15 +165,24 @@ camera.position = Cesium.Cartesian3.fromDegrees(127.1034,37.51283,100);
           }
       });
       */
+      if(viewer.scene.primitives._primitives.length == 4){
+        viewer.scene.primitives._primitives.pop();
+      }
       var req = new XMLHttpRequest();
       req.open("POST", "http://127.0.0.1:9090/geoserver/wfs", true);
       //req.setRequestHeader('User-Agent', 'XMLHTTP/1.0');
       //req.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
       //var qtype = document.getElementById("qtype").value
       //var envelope = document.getElementById("box").value
-      var coordinate = envelope.split(",");
-      var min = [coordinate[0] * 1, coordinate[1] * 1, coordinate[2] * 1];
-      var max = [coordinate[3] * 1, coordinate[4] * 1, coordinate[5] * 1];
+      var coordinate = envelope.split(" ");
+      var min = coordinate[0].split(",");
+      min[0] *= 1;
+      min[1] *= 1;
+      min[2] *= 1;
+      var max = coordinate[1].split(",");
+      max[0] *= 1;
+      max[1] *= 1;
+      max[2] *= 1;
       var points = [];
       points.push(min);
       points.push([min[0], max[1], min[2]]);
@@ -232,7 +241,7 @@ camera.position = Cesium.Cartesian3.fromDegrees(127.1034,37.51283,100);
           */
         }
       }
-      //req.send(request);
+      req.send(request);
     }
 
     function clearHighLight() {
