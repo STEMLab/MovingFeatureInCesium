@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" ng-app>
 <head>
   <!-- Use correct character set. -->
   <meta charset="utf-8">
@@ -20,9 +20,13 @@
 
   <script src="../js/MovingFeature.js"></script>
   <script src="../js/test.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.1/angular.min.js"></script>
   <!-- <script src="../filewrite.js"></script>-->
       <script async="" src="https://cdn.rawgit.com/eligrey/FileSaver.js/e9d941381475b5df8b7d7691013401e171014e89/FileSaver.min.js"/></script>
-  <script src="../js/Loader.js"></script>
+  <script src="../js/Loader.js"></script>\
+
+
+  <script src="http://jpillora.com/jquery.rest/dist/1/jquery.rest.min.js"></script>
   <!--<style>
       @import url(../Build/Cesium/Widgets/widgets.css);
       html, body, #cesiumContainer {
@@ -62,20 +66,20 @@
     <button onclick="toggleNetwork();" >toggle network</button></br>-->
    <!-- <label style ="color:white">IndoorGML size : <input type="text" id="scale" onchange='userScale = this.value' size="2"></label>
 
-    &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; 
-   
+    &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+
     <label style ="color:white">MovingFeature size :  <input type="text" id="radii" onchange='radii = this.value*1' size="2"></label>
-   &nbsp; &nbsp; &nbsp; &nbsp; 
+   &nbsp; &nbsp; &nbsp; &nbsp;
     <label style ="color:white">tranlate x : <input type="text" id="trans" onchange='x = this.value*1' size="2"></label>
-    
+
     <label style ="color:white">tranlate y : <input type="text" id="trans" onchange='y = this.value*1' size="2"></label>-->
     <!--<label style ="color:white"><input type="checkbox" id="stair" checked = 'true' onchange ='changecolor(3,this.checked)'>stair</label>
     <label style ="color:white"><input type="checkbox" id="room" checked = 'true' onchange ='changecolor(1,this.checked)'>room</label>
     <label style ="color:white"><input type="checkbox" id="corridor" checked = 'true' onchange ='changecolor(2,this.checked)'>corridor</label>
     <label style ="color:white"><input type="checkbox" id="door" checked = 'true' onchange ='changecolor(4,this.checked)'>door</label></br>
 -->
-     </div>      
-                
+     </div>
+
 
 
 
@@ -85,20 +89,20 @@
     Sandcastle.addToolbarButton('toggle network', toggleNetwork());
     Sandcastle.addToolbarButton('start', restart());
 
-    postDataMETA1 = "<wfs:GetFeature service=\"WFS3D\" version=\"1.0.0\"" +
- "outputFormat=\"JSON\"" +
- "xmlns:topp=\"http://www.openplans.org/topp\"" +
- "xmlns:wfs=\"http://www.opengis.net/wfs\"" +
- "xmlns:ogc=\"http://www.opengis.net/ogc\"" +
- "xmlns:gml=\"http://www.opengis.net/gml\"" +
- "xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"" +
- "xsi:schemaLocation=\"http://www.opengis.net/wfs\"" +
-  "                   http://schemas.opengis.net/wfs/1.0.0/WFS-basic.xsd\">" +
- "<wfs:Query typeName=\"";
+    postDataMETA1 = "<?xml version=\"1.0\" encoding=\"UTF-8\"?> <wfs:GetFeature service=\"WFS3D\" version=\"1.0.0\"" +
+ " outputFormat=\"JSON\"" +
+ " xmlns:topp=\"http://www.openplans.org/topp\"" +
+ " xmlns:wfs=\"http://www.opengis.net/wfs\"" +
+ " xmlns:ogc=\"http://www.opengis.net/ogc\"" +
+ " xmlns:gml=\"http://www.opengis.net/gml\"" +
+ " xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"" +
+ " xsi:schemaLocation=\"http://www.opengis.net/wfs" +
+  " http://schemas.opengis.net/wfs/1.0.0/WFS-basic.xsd\">" +
+ " <wfs:Query typeName=\"";
     postDataMETA2 = "\">" +
  "  <ogc:PropertyName>topp:id</ogc:PropertyName>" +
  "  <ogc:Filter>" +
-"<ogc:BBOX>" +
+" <ogc:BBOX>" +
 "       <ogc:PropertyName>topp:geom</ogc:PropertyName>" +
 "       <gml:Box srsName=\"http://www.opengis.net/gml/srs/epsg.xml#4327\">" +
 "          <gml:coordinates>";
@@ -107,7 +111,9 @@
 "     </ogc:BBOX>" +
 "  </ogc:Filter>" +
 " </wfs:Query>" +
-"</wfs:GetFeature>"; 
+"</wfs:GetFeature>";
+
+
     viewer = new Cesium.Viewer('cesiumContainer');
     viewer.scene.scene3DOnly = true;
     radii = 1;
@@ -118,14 +124,14 @@
     translate = [0, 0, 0];
     ENU = new Cesium.Matrix4();
     position = Cesium.Cartesian3.fromDegrees(127.1034,37.51283,0);
-      //var currentRotation = new Cesium.Matrix3(); 
+      //var currentRotation = new Cesium.Matrix3();
       var angle = 0.48;
       orientation  = new Cesium.Matrix4(Math.cos(angle),-Math.sin(angle),0,0,
                                    Math.sin(angle), Math.cos(angle),0,0,
                                   0,0,1,0,
                                  0,0,0,1);
     Cesium.Transforms.eastNorthUpToFixedFrame(position,ellipsoid,ENU);//matrix4
-    //Cesium.Matrix4.getRotation(ENU, currentRotation); 
+    //Cesium.Matrix4.getRotation(ENU, currentRotation);
     Cesium.Matrix4.multiplyByPoint(orientation, ENU , ENU );
 
 
@@ -133,20 +139,67 @@ var camera = new Cesium.Camera(viewer.scene);
 camera.position = Cesium.Cartesian3.fromDegrees(127.1034,37.51283,100);
 
     var loader = new Loader();
+
     function requestWFS() {
-      var qtype = document.getElementById("qtype").value
-      var envelope = document.getElementById("box").value
+
+      var qtype = "topp:gaia";
+      //document.getElementById("qtype").value;
+      var envelope = "127.10156397,37.46185285,-100 127.10226404,37.46227915,100";
+      //document.getElementById("box").value;
+
+      var request = postDataMETA1 + qtype + postDataMETA2 + envelope + postDataMETA3;
+
+/*
+      $.ajax({
+          type: 'POST',
+          url: 'http://127.0.0.1:9090/geoserver/wfs',
+          crossDomain: true,
+          data: result,
+          dataType: 'json',
+          success: function(responseData, textStatus, jqXHR) {
+              var value = responseData;
+              console.log(value);
+          },
+          error: function (responseData, textStatus, errorThrown) {
+              alert('POST failed.');
+          }
+      });
+      */
       var req = new XMLHttpRequest();
-      req.open("POST", document.getElementById("url").value, true);
-      req.setRequestHeader('User-Agent', 'XMLHTTP/1.0');
-      req.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+      req.open("POST", "http://127.0.0.1:9090/geoserver/wfs", true);
+      //req.setRequestHeader('User-Agent', 'XMLHTTP/1.0');
+      //req.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
       req.onreadystatechange = function () {
         if (this.readyState == 4 && this.status == 200) {
-          alert(this.responseText);
+          var response = this.responseText;
+          var responseJSON = JSON.parse(response);
+
+          var features = responseJSON.features;
+          var idList = [];
+          for (k in features) {
+              var f = features[k];
+              var id = f.properties.id;
+              idList.push(id);
+          }
+          console.log(idList);
+          /*
+          var parser = new DOMParser();
+          var xmlDoc = parser.parseFromString(response, "text/xml");
+
+          var idTags = document.getElementsByTagName("id");
+
+          var i;
+          for (i = 0; i < idTags.length; i++) {
+              var id = idTags[i].nodeValue;
+              idList.push(id);
+          }
+          console.log(idList);
+          */
         }
       }
-      req.send(postDataMETA1 + qtype + postDataMETA2 + envelope + postDataMETA3);
+      req.send(request);
     }
+
     function readText(that){
         if(startMF == 1) {
           viewer.entities.removeAll();
@@ -155,7 +208,7 @@ camera.position = Cesium.Cartesian3.fromDegrees(127.1034,37.51283,100);
         if(that.files && that.files[0]){
             loader.loadFile(that.files[0]);
         }//end if html5 filelist support
-    } 
+    }
     function restart() {
       return function(){
         viewer.clock.currentTime = start;
@@ -166,7 +219,7 @@ camera.position = Cesium.Cartesian3.fromDegrees(127.1034,37.51283,100);
         viewer.timeline.updateFromClock();
         viewer.timeline.zoomTo(viewer.clock.startTime, viewer.clock.stopTime);
       };
-      
+
     }
     function viewAll() {
       return function() {
@@ -222,7 +275,7 @@ camera.position = Cesium.Cartesian3.fromDegrees(127.1034,37.51283,100);
           preIndex[id] = Index[id];
         }
       }
-      
+
       /*if(color == 1) {
         for(var id in room) {
            var attributes = viewer.scene.primitives._primitives[0].getGeometryInstanceAttributes(id);
@@ -278,7 +331,7 @@ camera.position = Cesium.Cartesian3.fromDegrees(127.1034,37.51283,100);
     } else {
         alert('Globe was not picked');
     }
-  
+
 }, false);*/
 
   </script>
