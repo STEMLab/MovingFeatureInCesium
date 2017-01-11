@@ -2,7 +2,7 @@ function calCenter(maxmin_xyz) {
   var boundingBoxLength = [maxmin_xyz[0] - maxmin_xyz[3], maxmin_xyz[1] - maxmin_xyz[4], maxmin_xyz[2] - maxmin_xyz[5]];
   var maxLength = Math.max(boundingBoxLength[0], boundingBoxLength[1], boundingBoxLength[2]);
   if(userScale == 0) {
-    scale = 370 / maxLength;
+    scale = 400 / maxLength;
   }else scale = userScale;
   
   translate = [-(boundingBoxLength[0] / 2) - maxmin_xyz[3] + x, -(boundingBoxLength[1] / 2) - maxmin_xyz[4] + y, -maxmin_xyz[5]];
@@ -33,18 +33,28 @@ function draw(indoor,maxmin_xyz) {
       var surfaces = cells[i].geometry;
       var type = cells[i].type;
       var floor = cells[i].floor;
+      var cellid = cells[i].cellid;
+      HilightCell[cellid] = [];
+      solidtocsv += cellid + ", \"Solid(((";
       for(var j = 0; j < surfaces.length; j++) {
 
           transformCoordinates(surfaces[j].exterior);
 
           transformCoordinates(surfaces[j].interior);
           if(surfaces[j].interior.length == 0) {
-            createPolygon(surfaces[j].exterior, surfaces[j].polyonid, type, floor);
+            var poly = createPolygon(surfaces[j].exterior, surfaces[j].polyonid, type, floor);
+            HilightCell[cellid].push(poly);
           }
           else {
-            createPolygonwithHole(surfaces[j].exterior, surfaces[j].interior, surfaces[j].polyonid, type, floor)
+            var poly = createPolygonwithHole(surfaces[j].exterior, surfaces[j].interior, surfaces[j].polyonid, type, floor);
+            HilightCell[cellid].push(poly);
           }
+          if(j != surfaces.length - 1) {
+            solidtocsv += ") , (";
+          }
+          
       }
+      solidtocsv += ")))\"\n";
   }
     
  /*console.log("draw cell finish");
@@ -67,19 +77,19 @@ console.log(new Date(Date.now()));
     var graphs = indoor.multiLayeredGraph;
 
     for(var i = 0; i < graphs.length; i++){
-       /* var states = graphs[i].stateMember;
-        for(var j = 0; j < states.length; j++){
-            transformCoordinates(states[j].position);
-            var result = toCartesian3(states[j].position);
-            var redSphere = viewer.entities.add({
-                name : 'Red sphere with black outline',
-                position: result[0],
-                ellipsoid : {
-                    radii : new Cesium.Cartesian3(1000.0, 1000.0, 1000.0),
-                    material : Cesium.Color.RED.withAlpha(0.5),
-                }
-            });
-        }*/
+        //var states = graphs[i].stateMember;
+        //for(var j = 0; j < states.length; j++){
+        //    transformCoordinates(states[j].position);
+        //    var result = toCartesian3(states[j].position);
+        //   var redSphere = viewer.entities.add({
+        //        name : 'Red sphere with black outline',
+        //        position: result[0],
+        //        ellipsoid : {
+        //            radii : new Cesium.Cartesian3(1000.0, 1000.0, 1000.0),
+        //            material : Cesium.Color.RED.withAlpha(0.5),
+        //        }
+        //    });
+        //}
 
         var edges = {};
         var trasitions = graphs[i].transitionMember;
@@ -133,8 +143,9 @@ function toggleNetwork() {
   };
   
 }
-function toCartesian3(vertices) {
-  
+function toCartesian3(vertices,type) {
+  if(type == 2)solidtocsv += ", ";
+  solidtocsv += "(";
   var result = [];
   
   for(var k = 0;k < vertices.length;k += 3) {
@@ -143,16 +154,25 @@ function toCartesian3(vertices) {
 
     Cesium.Matrix4.multiplyByPoint(ENU, finalPos, finalPos);
 
+    var carto  = Cesium.Ellipsoid.WGS84.cartesianToCartographic(finalPos);     
+    var lon = Cesium.Math.toDegrees(carto.longitude); 
+    var lat = Cesium.Math.toDegrees(carto.latitude);
+
+   if(k == 0) {
+    solidtocsv += lon + " " + lat + " " + carto.height;
+   }
+   else {solidtocsv += "," + lon + " " + lat + " " + carto.height;}
 
     result.push(finalPos);
   }
+  solidtocsv += ")";
   return result;
 }
 function addToPrimitive(polygons ,polylines) {
   //console.log(polygons);
    viewer.scene.primitives.add(new Cesium.Primitive({
                             geometryInstances : polygons,
-                             appearance : new Cesium.PerInstanceColorAppearance()
+                             appearance : new Cesium.PerInstanceColorAppearance({faceForward : false})
                             //appearance : new Cesium.MaterialAppearance({
                             //  material : Cesium.Material.fromType('Color', {
                             //              color : new Cesium.Color(0.0, 0.0, 1.0, 0.05)
@@ -175,7 +195,7 @@ var lineID = id + "l";
                       geometry : new Cesium.PolygonGeometry({
                                     polygonHierarchy : new Cesium.PolygonHierarchy(
                                       //Cesium.Cartesian3.fromDegreesArrayHeights(exterior)
-                                      toCartesian3(exterior)
+                                      toCartesian3(exterior,1)
                                     ),
                                     //material : Cesium.Color.BLUE.withAlpha(0.01),
                                     perPositionHeight : true
@@ -230,7 +250,7 @@ function createPolygonwithHole(exterior,interior,id,color,floor) {
   var instance = new Cesium.GeometryInstance({
                       geometry : new Cesium.PolygonGeometry({
                                     polygonHierarchy : new Cesium.PolygonHierarchy(
-                                      toCartesian3(exterior),[toCartesian3(interior)]
+                                      toCartesian3(exterior,1),[toCartesian3(interior,2)]
                                       //Cesium.Cartesian3.fromDegreesArrayHeights(exterior),[ Cesium.Cartesian3.fromDegreesArrayHeights(interior)]
                                     ),
                                     perPositionHeight : true

@@ -119,20 +119,20 @@
     radii = 1;
     ellipsoid = viewer.scene.globe.ellipsoid;
     userScale = 0;
-    x = 0;y = 0;
+    x = 15;y = 25;
     scale = 1;
     translate = [0, 0, 0];
     ENU = new Cesium.Matrix4();
     position = Cesium.Cartesian3.fromDegrees(127.1034,37.51283,0);
       //var currentRotation = new Cesium.Matrix3();
-      var angle = 0.48;
+      var angle = 0.46;
       orientation  = new Cesium.Matrix4(Math.cos(angle),-Math.sin(angle),0,0,
                                    Math.sin(angle), Math.cos(angle),0,0,
                                   0,0,1,0,
                                  0,0,0,1);
     Cesium.Transforms.eastNorthUpToFixedFrame(position,ellipsoid,ENU);//matrix4
     //Cesium.Matrix4.getRotation(ENU, currentRotation);
-    Cesium.Matrix4.multiplyByPoint(orientation, ENU , ENU );
+    //Cesium.Matrix4.multiplyByPoint(orientation, ENU , ENU );
 
 
 var camera = new Cesium.Camera(viewer.scene);
@@ -169,6 +169,39 @@ camera.position = Cesium.Cartesian3.fromDegrees(127.1034,37.51283,100);
       req.open("POST", "http://127.0.0.1:9090/geoserver/wfs", true);
       //req.setRequestHeader('User-Agent', 'XMLHTTP/1.0');
       //req.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+      //var qtype = document.getElementById("qtype").value
+      //var envelope = document.getElementById("box").value
+      var coordinate = envelope.split(",");
+      var max = [coordinate[0] * 1, coordinate[1] * 1, coordinate[2] * 1];
+      var min = [coordinate[3] * 1, coordinate[4] * 1, coordinate[5] * 1];
+      transformCoordinates(max);
+      transformCoordinates(min);
+      var box = new Cesium.BoxGeometry({
+        vertexFormat : Cesium.VertexFormat.POSITION_ONLY,
+        maximum : toCartesian3(max),
+        minimum : toCartesian3(min)
+      });
+      //var geometry = Cesium.BoxGeometry.createGeometry(box);
+      //viewer.entities.add(geometry);
+       var instance = new Cesium.GeometryInstance({
+                      geometry : box,
+                      attributes : {
+                        color : Cesium.ColorGeometryInstanceAttribute.fromColor(Cesium.Color.WHITE)
+                                }
+                    })
+       viewer.scene.primitives.add(new Cesium.Primitive({
+                            geometryInstances : instance,
+                             appearance : new Cesium.PerInstanceColorAppearance({faceForward : false})
+  }));
+       viewer.entities.add({
+                    position: new Cesium.Cartesian3.fromDegrees(127.10233736459824, 37.51337631034256, 3.0),
+                    point : {
+                      pixelSize : 5,
+                      color : Cesium.Color.fromBytes(255, 255, 255, 255)
+                    }
+                  });
+                  viewer.zoomTo(viewer.entities);
+
       req.onreadystatechange = function () {
         if (this.readyState == 4 && this.status == 200) {
           var response = this.responseText;
@@ -328,6 +361,7 @@ camera.position = Cesium.Cartesian3.fromDegrees(127.1034,37.51283,100);
         var latitudeString = Cesium.Math.toDegrees(cartographic.latitude).toFixed(5);
 
         alert(longitudeString + ', ' + latitudeString);
+        alert(cartesian.x + ', ' + cartesian.y);
     } else {
         alert('Globe was not picked');
     }
