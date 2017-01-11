@@ -151,7 +151,7 @@ function toCartesian3(vertices,type) {
   for(var k = 0;k < vertices.length;k += 3) {
    var offset = new Cesium.Cartesian3(vertices[k], vertices[k + 1], vertices[k + 2]);
     var finalPos = Cesium.Matrix4.multiplyByPoint(orientation, offset, new Cesium.Cartesian3());
-
+    //var finalPos = Cesium.Matrix4.multiplyByPoint(ENU, offset, new Cesium.Cartesian3());
     Cesium.Matrix4.multiplyByPoint(ENU, finalPos, finalPos);
 
     var carto  = Cesium.Ellipsoid.WGS84.cartesianToCartographic(finalPos);     
@@ -159,9 +159,13 @@ function toCartesian3(vertices,type) {
     var lat = Cesium.Math.toDegrees(carto.latitude);
 
    if(k == 0) {
-    solidtocsv += lon + " " + lat + " " + carto.height;
+    //solidtocsv += lon + " " + lat + " " + carto.height;
+    solidtocsv += vertices[k] + " " + vertices[k + 1] + " " + vertices[k + 2];
    }
-   else {solidtocsv += "," + lon + " " + lat + " " + carto.height;}
+   else {
+    //solidtocsv += "," + lon + " " + lat + " " + carto.height;
+    solidtocsv += "," + vertices[k] + " " + vertices[k + 1] + " " + vertices[k + 2]
+  }
 
     result.push(finalPos);
   }

@@ -104,6 +104,6 @@ function createPolygonforbbox(exterior) {
                         color : Cesium.ColorGeometryInstanceAttribute.fromColor(Cesium.Color.BLACK.withAlpha(0.2))
                                 }
                     })*/
-  group.push(instance);
+  Gaia.push(instance);
  //groupline.push(instance2);
 }

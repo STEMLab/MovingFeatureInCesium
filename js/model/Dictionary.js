@@ -25,3 +25,4 @@ var ControlVisible = {};
 var ControlVisibleLine = {};
 var Index = {};
 var preIndex = {};
+var Gaia = [];

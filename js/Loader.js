@@ -67,8 +67,6 @@ var Loader = function ( ) {
 			}
 			case 'txt' : {//test
 				solidtocsv = "id, geom\n";
-				group = [];
-  				groupline = [];
 				Papa.parse(file, {
 					download: true,
 					delimiter: " ",
