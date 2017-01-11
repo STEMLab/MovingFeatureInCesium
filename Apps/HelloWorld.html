@@ -182,7 +182,7 @@ camera.position = Cesium.Cartesian3.fromDegrees(127.1034,37.51283,100);
       points.push([max[0], min[1] ,max[2]]);
       points.push([max[0], min[1], min[2]]);
       points.push([max[0], max[1], min[2]]);
-      points.push(max);    
+      points.push(max);
 
      createPolygonforbbox(points[0].concat(points[1]).concat(points[2]).concat(points[3]));
      createPolygonforbbox(points[4].concat(points[5]).concat(points[6]).concat(points[7]));
@@ -192,7 +192,7 @@ camera.position = Cesium.Cartesian3.fromDegrees(127.1034,37.51283,100);
      createPolygonforbbox(points[2].concat(points[7]).concat(points[4]).concat(points[3]));
 
        showInCesium(Gaia,[]);
-       
+
 
       idList = [];
       req.onreadystatechange = function () {
@@ -232,7 +232,7 @@ camera.position = Cesium.Cartesian3.fromDegrees(127.1034,37.51283,100);
           */
         }
       }
-      //req.send(request);
+      req.send(request);
     }
 
     function clearHighLight() {
@@ -240,7 +240,7 @@ camera.position = Cesium.Cartesian3.fromDegrees(127.1034,37.51283,100);
         var polygons = HilightCell[ idList[id] ];
         for(p in polygons) {
           var attributes = viewer.scene.primitives._primitives[1].getGeometryInstanceAttributes( polygons[p] );
-          attributes.color = Cesium.ColorGeometryInstanceAttribute.toValue(Cesium.Color.BLUE.withAlpha(1));
+          attributes.color = Cesium.ColorGeometryInstanceAttribute.toValue(Cesium.Color.BLUE.withAlpha(0.1));
         }
       }
       idList = [];
