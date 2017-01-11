@@ -140,40 +140,10 @@ var camera = new Cesium.Camera(viewer.scene);
 camera.position = Cesium.Cartesian3.fromDegrees(127.1034,37.51283,100);
 
     var loader = new Loader();
-
-    function requestWFS() {
-
-      var qtype = document.getElementById("qtype").value; //"topp:gaia";
-      //document.getElementById("qtype").value;
-      var envelope = document.getElementById("box").value; //"127.10156397,37.46185285,-100 127.10226404,37.46227915,100";
-
-      var request = postDataMETA1 + qtype + postDataMETA2 + envelope + postDataMETA3;
-
-/*
-      $.ajax({
-          type: 'POST',
-          url: 'http://127.0.0.1:9090/geoserver/wfs',
-          crossDomain: true,
-          data: result,
-          dataType: 'json',
-          success: function(responseData, textStatus, jqXHR) {
-              var value = responseData;
-              console.log(value);
-          },
-          error: function (responseData, textStatus, errorThrown) {
-              alert('POST failed.');
-          }
-      });
-      */
-      if(viewer.scene.primitives._primitives.length == 4){
+    function drawSolid() {
+       if(viewer.scene.primitives._primitives.length == 4){
         viewer.scene.primitives._primitives.pop();
       }
-      var req = new XMLHttpRequest();
-      req.open("POST", "http://127.0.0.1:9090/geoserver/wfs", true);
-      //req.setRequestHeader('User-Agent', 'XMLHTTP/1.0');
-      //req.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
-      //var qtype = document.getElementById("qtype").value
-      //var envelope = document.getElementById("box").value
       var coordinate = envelope.split(" ");
       var min = coordinate[0].split(",");
       min[0] *= 1;
@@ -201,8 +171,56 @@ camera.position = Cesium.Cartesian3.fromDegrees(127.1034,37.51283,100);
      createPolygonforbbox(points[2].concat(points[7]).concat(points[4]).concat(points[3]));
 
        showInCesium(Gaia,[]);
-       
+    }
+    function drawPolyline() {
+      var coordinate = envelope.split(" ");
+      var poslist = [];
+      for(var i = 0; i < coordinate.length; i++) {
+        var intarray = coordinate[i].split(",");
+        intarray[0] *= 1;intarray[1] *= 1;intarray[2] *= 1;
+        poslist = poslist.concat(intarray);
+      }
+      viewer.entities.add({
+            polyline : {
+                positions : toCartesian3(poslist),
+                width : 5,
+                material : Cesium.Color.SPRINGGREEN
+            }
+        });
+      viewer.zoomTo(viewer.entities);
+    }
+    function requestWFS() {
 
+      var qtype = document.getElementById("qtype").value; //"topp:gaia";
+      //document.getElementById("qtype").value;
+      var envelope = document.getElementById("box").value; //"127.10156397,37.46185285,-100 127.10226404,37.46227915,100";
+
+      var request = postDataMETA1 + qtype + postDataMETA2 + envelope + postDataMETA3;
+
+/*
+      $.ajax({
+          type: 'POST',
+          url: 'http://127.0.0.1:9090/geoserver/wfs',
+          crossDomain: true,
+          data: result,
+          dataType: 'json',
+          success: function(responseData, textStatus, jqXHR) {
+              var value = responseData;
+              console.log(value);
+          },
+          error: function (responseData, textStatus, errorThrown) {
+              alert('POST failed.');
+          }
+      });
+      */
+     
+      var req = new XMLHttpRequest();
+      req.open("POST", "http://127.0.0.1:9090/geoserver/wfs", true);
+      //req.setRequestHeader('User-Agent', 'XMLHTTP/1.0');
+      //req.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+      //var qtype = document.getElementById("qtype").value
+      //var envelope = document.getElementById("box").value
+ 
       idList = [];
       req.onreadystatechange = function () {
         if (this.readyState == 4 && this.status == 200) {
@@ -241,7 +259,7 @@ camera.position = Cesium.Cartesian3.fromDegrees(127.1034,37.51283,100);
           */
         }
       }
-      req.send(request);
+      //req.send(request);
     }
 
     function clearHighLight() {
