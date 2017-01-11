@@ -214,6 +214,16 @@ camera.position = Cesium.Cartesian3.fromDegrees(127.1034,37.51283,100);
               var id = f.properties.id;
               idList.push(id);
           }
+
+          for(id in idList) {
+            var polygons = HilightCell[id];
+            for(p in polygons) {
+              var attributes = viewer.scene.primitives._primitives[0].getGeometryInstanceAttributes( p );
+              attributes.color = Cesium.ColorGeometryInstanceAttribute.toValue(Cesium.Color.YELLOW.withAlpha(1));
+            }
+          }
+
+
           console.log(idList);
           /*
           var parser = new DOMParser();
