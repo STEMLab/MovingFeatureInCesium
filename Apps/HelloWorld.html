@@ -57,10 +57,11 @@
     <label style ="color:white">MovingFeature : <input type="file" id="fileinputmf" onchange='readText(this)' ></label></br>
     <label style ="color:white">floor list : <input type="text" id="floor" size="2"></label>
      <button onclick="enableFloor()">view</button></br>
-     <label style ="color:white">url : <input type="text" id="url" size="8"></label>
-     <label style ="color:white">query type name : <input type="text" id="qtype" size="4"></label>
-     <label style ="color:white">box envelope : <input type="text" id="box" size="10"></label>
-     <button onclick="requestWFS()">request</button></br>
+     <label style ="color:white">URL : <input type="text" id="url" size="8"></label>
+     <label style ="color:white">Type Name : <input type="text" id="qtype" size="4"></label>
+     <label style ="color:white">Envelope : <input type="text" id="box" size="10"></label>
+     <button onclick="requestWFS()">Request</button>
+     <button onclick="clearHighLight()">Clear HighLight</button></br>
     <!--<button onclick="restart();" >start</button>
     <button onclick="viewer.zoomTo(viewer.entities);">zoom</button>
     <button onclick="toggleNetwork();" >toggle network</button></br>-->
@@ -142,10 +143,9 @@ camera.position = Cesium.Cartesian3.fromDegrees(127.1034,37.51283,100);
 
     function requestWFS() {
 
-      var qtype = "topp:gaia";
+      var qtype = document.getElementById("qtype").value; //"topp:gaia";
       //document.getElementById("qtype").value;
-      var envelope = "127.10156397,37.46185285,-100 127.10226404,37.46227915,100";
-      //document.getElementById("box").value;
+      var envelope = document.getElementById("box").value; //"127.10156397,37.46185285,-100 127.10226404,37.46227915,100";
 
       var request = postDataMETA1 + qtype + postDataMETA2 + envelope + postDataMETA3;
 
@@ -195,19 +195,28 @@ camera.position = Cesium.Cartesian3.fromDegrees(127.1034,37.51283,100);
   }));
        
 
+      idList = [];
       req.onreadystatechange = function () {
         if (this.readyState == 4 && this.status == 200) {
           var response = this.responseText;
           var responseJSON = JSON.parse(response);
 
           var features = responseJSON.features;
-          var idList = [];
           for (k in features) {
               var f = features[k];
               var id = f.properties.id;
               idList.push(id);
           }
-          console.log(idList);
+
+          for(id in idList) {
+            var polygons = HilightCell[id];
+            console.log(polygons);
+            for(p in polygons) {
+              var attributes = viewer.scene.primitives._primitives[0].getGeometryInstanceAttributes( p );
+              attributes.color = Cesium.ColorGeometryInstanceAttribute.toValue(Cesium.Color.YELLOW.withAlpha(1));
+            }
+          }
+
           /*
           var parser = new DOMParser();
           var xmlDoc = parser.parseFromString(response, "text/xml");
@@ -224,6 +233,17 @@ camera.position = Cesium.Cartesian3.fromDegrees(127.1034,37.51283,100);
         }
       }
       //req.send(request);
+    }
+
+    function clearHighLight() {
+      for(id in idList) {
+        var polygons = HilightCell[id];
+        for(p in polygons) {
+          var attributes = viewer.scene.primitives._primitives[0].getGeometryInstanceAttributes( p );
+          attributes.color = Cesium.ColorGeometryInstanceAttribute.toValue(Cesium.Color.BLUE.withAlpha(1));
+        }
+      }
+      idList = [];
     }
 
     function readText(that){
@@ -286,7 +306,7 @@ camera.position = Cesium.Cartesian3.fromDegrees(127.1034,37.51283,100);
       for(var id in Index) {
         if(Index[id] != preIndex[id]) {
           for(var i = 0;i < ControlVisible[id].length;i++ ) {
-              var attributes = viewer.scene.primitives._primitives[1].getGeometryInstanceAttributes( ControlVisible[id][i][0]);
+              var attributes = viewer.scene.primitives._primitives[0].getGeometryInstanceAttributes( ControlVisible[id][i][0]);
               var tempcolor;
               if(ControlVisible[id][i][1] == 1) tempcolor = Cesium.Color.GREEN.withAlpha(Index[id] * 0.1);
               else if(ControlVisible[id][i][1] == 2)tempcolor = Cesium.Color.VIOLET.withAlpha(Index[id] * 0.1);
@@ -295,7 +315,7 @@ camera.position = Cesium.Cartesian3.fromDegrees(127.1034,37.51283,100);
               attributes.color = Cesium.ColorGeometryInstanceAttribute.toValue(tempcolor);
             }
           for(var i = 0;i < ControlVisibleLine[id].length;i++ ) {
-            var attributes = viewer.scene.primitives._primitives[2].getGeometryInstanceAttributes( ControlVisibleLine[id][i]);
+            var attributes = viewer.scene.primitives._primitives[1].getGeometryInstanceAttributes( ControlVisibleLine[id][i]);
             attributes.color = Cesium.ColorGeometryInstanceAttribute.toValue(Cesium.Color.BLACK.withAlpha(Index[id] * 0.2));
           }
           preIndex[id] = Index[id];
