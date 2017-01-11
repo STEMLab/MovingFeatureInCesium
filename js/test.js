@@ -1,6 +1,6 @@
 function drawMultiSurface(list) {
 
-  
+
   //solidtocsv += list[0] + ",";
   var last = [list[8] * 1,list[7] * 1,list[9] * 1];
   var first = [last[0] * -1,last[1] * -1,last[2] * -1];
@@ -22,7 +22,7 @@ function drawMultiSurface(list) {
    points.push([last[0], first[1] ,last[2]]);
    points.push([last[0], first[1], first[2]]);
    points.push([last[0], last[1], first[2]]);
-   points.push(last);    
+   points.push(last);
    solidtocsv += "\"uuid" + list[0] + "\"" + ", \"Solid((((";
    createPolygonforbbox(points[0].concat(points[1]).concat(points[2]).concat(points[3]));
    solidtocsv += ")) , ((";
@@ -36,13 +36,13 @@ function drawMultiSurface(list) {
    solidtocsv += ")) , ((";
    createPolygonforbbox(points[2].concat(points[7]).concat(points[4]).concat(points[3]));
    solidtocsv += "))))\"\n";
-   /*var pos = Cesium.Cartesian3.fromDegrees(61.296382224724795,35.628536117000692); 
-var carto  = Cesium.Ellipsoid.WGS84.cartesianToCartographic(pos);     
-var lon = Cesium.Math.toDegrees(carto.longitude); 
+   /*var pos = Cesium.Cartesian3.fromDegrees(61.296382224724795,35.628536117000692);
+var carto  = Cesium.Ellipsoid.WGS84.cartesianToCartographic(pos);
+var lon = Cesium.Math.toDegrees(carto.longitude);
 var lat = Cesium.Math.toDegrees(carto.latitude); */
 }
 function toCartesian3togetwgs84(vertices) {
-  
+
   var result = [];
   var first;
   for(var k = 0;k < vertices.length;k += 3) {
@@ -50,8 +50,8 @@ function toCartesian3togetwgs84(vertices) {
     var finalPos = Cesium.Matrix4.multiplyByPoint(orientation, offset, new Cesium.Cartesian3());
     Cesium.Matrix4.multiplyByPoint(ENU, finalPos, finalPos);
 
-    var carto  = Cesium.Ellipsoid.WGS84.cartesianToCartographic(finalPos);     
-    var lon = Cesium.Math.toDegrees(carto.longitude); 
+    var carto  = Cesium.Ellipsoid.WGS84.cartesianToCartographic(finalPos);
+    var lon = Cesium.Math.toDegrees(carto.longitude);
     var lat = Cesium.Math.toDegrees(carto.latitude);
 
    if(k == 0) {
@@ -90,9 +90,8 @@ function createPolygonforbbox(exterior,id) {
                                     perPositionHeight : true
                                 }),
                       attributes : {
-                        color : Cesium.ColorGeometryInstanceAttribute.fromColor(Cesium.Color.WHITE.withAlpha(0.8))
-                                },
-                      id : id
+                        color : Cesium.ColorGeometryInstanceAttribute.fromColor(Cesium.Color.RED.withAlpha(0.8))
+                                }
                     })
  /*var instance2 = new Cesium.GeometryInstance({
                       geometry : new Cesium.PolygonOutlineGeometry({
