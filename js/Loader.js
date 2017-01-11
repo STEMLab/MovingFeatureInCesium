@@ -17,6 +17,7 @@ var Loader = function ( ) {
 		} );*/
 		switch ( extension ) {
 			case 'gml': {
+				solidtocsv = "id, geom\n";
 				var inlineWorkerText =
     			"self.addEventListener('message', function(e) { postMessage(e); } ,false);"
 				;
@@ -35,6 +36,9 @@ var Loader = function ( ) {
 						//var maxmin_xyz = indoor.init(ev.data);
 						var maxmin_xyz = indoor.init(data);
 					draw(indoor,maxmin_xyz);
+
+					//var blob = new Blob([solidtocsv], {type: "text/plain;charset=utf-8"});
+					//	saveAs(blob, "lotte.csv");
 					//});
 					//worker.postMessage(contents);	
 				}, false );
