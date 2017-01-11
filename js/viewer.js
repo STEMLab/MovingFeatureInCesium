@@ -42,12 +42,12 @@ function draw(indoor,maxmin_xyz) {
 
           transformCoordinates(surfaces[j].interior);
           if(surfaces[j].interior.length == 0) {
-            var poly = createPolygon(surfaces[j].exterior, surfaces[j].polyonid, type, floor);
-            HilightCell[cellid].push(poly);
+            createPolygon(surfaces[j].exterior, surfaces[j].polyonid, type, floor);
+            HilightCell[cellid].push(surfaces[j].polyonid);
           }
           else {
-            var poly = createPolygonwithHole(surfaces[j].exterior, surfaces[j].interior, surfaces[j].polyonid, type, floor);
-            HilightCell[cellid].push(poly);
+            createPolygonwithHole(surfaces[j].exterior, surfaces[j].interior, surfaces[j].polyonid, type, floor);
+            HilightCell[cellid].push(surfaces[j].polyonid);
           }
           if(j != surfaces.length - 1) {
             solidtocsv += ") , (";
@@ -243,7 +243,6 @@ var lineID = id + "l";
   else if(color == 4) {door[id] = instance;doorline[lineID] = instance2;}*/
   group.push(instance);
   groupline.push(instance2);
-  return instance;
 }
 function createPolygonwithHole(exterior,interior,id,color,floor) {
  var lineID = id + "l";
@@ -287,5 +286,4 @@ function createPolygonwithHole(exterior,interior,id,color,floor) {
   else if(color == 4) {door[id] = instance;doorline[lineID] = instance2;}*/
   group.push(instance);
   groupline.push(instance2);
-  return instance;
 }
