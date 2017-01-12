@@ -86,6 +86,59 @@
 
 
   <script>
+    var options = [{
+      text : 'select'
+    },{
+        text : 'polyline',
+        onselect : function() {
+            var envelope = document.getElementById("box").value;
+            drawPolyline(envelope);
+            FilterGeom = "<Intersects>" +
+                          "<PropertyName>topp:geom</PropertyName>" +
+                          "<gml:LineString srsName=\"http://www.opengis.net/gml/srs/epsg.xml#4327\">" +
+                          "<gml:coordinates>" + 
+                          envelope +
+                          "</gml:coordinates>" +
+                          "</gml:LinearRing>" +
+                            "</Intersects>";
+
+        }
+    }, {
+        text : 'surface',
+        onselect : function() {
+            var envelope = document.getElementById("box").value;
+            drawPolygon(envelope);
+            FilterGeom = "<Intersects>" +
+                         "<PropertyName>topp:geom</PropertyName>" +
+                          "<gml:Polygon srsName=\"http://www.opengis.net/gml/srs/epsg.xml#4327\">" +
+                          "<gml:outerBoundaryIs>" +
+                          "<gml:LinearRing>" +
+                          "<gml:coordinates>" +
+                          envelope +
+                          "</gml:coordinates>" +
+                          "</gml:LinearRing>" +
+                          "</gml:outerBoundaryIs>" +
+                          "</gml:Polygon>" +
+                               "</Intersects>";
+
+        }
+    }, {
+        text : 'solid',
+        onselect : function() {
+            var envelope = document.getElementById("box").value;
+            drawSolid(envelope);
+            FilterGeom = "<ogc:BBOX>" +
+                         "<ogc:PropertyName>topp:geom</ogc:PropertyName>" +
+                         "<gml:Box srsName=\"http://www.opengis.net/gml/srs/epsg.xml#4327\">" +
+                            "<gml:coordinates>" +
+                                envelope +
+                            "</gml:coordinates>" +
+                         "</gml:Box>" +
+                       "</ogc:BBOX>";
+        }
+    }];
+
+    Sandcastle.addToolbarMenu(options);
     Sandcastle.addToolbarButton('viewAll', viewAll());
     Sandcastle.addToolbarButton('toggle network', toggleNetwork());
     Sandcastle.addToolbarButton('start', restart());
@@ -102,18 +155,18 @@
  " <wfs:Query typeName=\"";
     postDataMETA2 = "\">" +
  "  <ogc:PropertyName>topp:id</ogc:PropertyName>" +
- "  <ogc:Filter>" +
-" <ogc:BBOX>" +
-"       <ogc:PropertyName>topp:geom</ogc:PropertyName>" +
-"       <gml:Box srsName=\"http://www.opengis.net/gml/srs/epsg.xml#4327\">" +
-"          <gml:coordinates>";
-    postDataMETA3 = "</gml:coordinates>" +
-"       </gml:Box>" +
-"     </ogc:BBOX>" +
-"  </ogc:Filter>" +
+ "  <ogc:Filter>";
+//" <ogc:BBOX>" +
+//"       <ogc:PropertyName>topp:geom</ogc:PropertyName>" +
+//"       <gml:Box srsName=\"http://www.opengis.net/gml/srs/epsg.xml#4327\">" +
+//"          <gml:coordinates>";
+    //postDataMETA3 = "</gml:coordinates>" +
+//"       </gml:Box>" +
+//"     </ogc:BBOX>" +
+      postDataMETA3 = "  </ogc:Filter>" +
 " </wfs:Query>" +
 "</wfs:GetFeature>";
-
+    FilterGeom = "";
     solidtocsv = "id, geom\n";
     viewer = new Cesium.Viewer('cesiumContainer');
     viewer.scene.scene3DOnly = true;
@@ -140,19 +193,18 @@ var camera = new Cesium.Camera(viewer.scene);
 camera.position = Cesium.Cartesian3.fromDegrees(127.1034,37.51283,100);
 
     var loader = new Loader();
-    function drawSolid() {
-       if(viewer.scene.primitives._primitives.length == 4){
+    function drawSolid(envelope) {
+      if(viewer.scene.primitives._primitives.length == 4){
         viewer.scene.primitives._primitives.pop();
       }
+
       var coordinate = envelope.split(" ");
       var min = coordinate[0].split(",");
-      min[0] *= 1;
-      min[1] *= 1;
-      min[2] *= 1;
+      min[0] *= 1;min[1] *= 1;min[2] *= 1;
+
       var max = coordinate[1].split(",");
-      max[0] *= 1;
-      max[1] *= 1;
-      max[2] *= 1;
+      max[0] *= 1;max[1] *= 1;max[2] *= 1;
+
       var points = [];
       points.push(min);
       points.push([min[0], max[1], min[2]]);
@@ -172,7 +224,24 @@ camera.position = Cesium.Cartesian3.fromDegrees(127.1034,37.51283,100);
 
        showInCesium(Gaia,[]);
     }
-    function drawPolyline() {
+    function drawPolygon(envelope) {
+      if(viewer.scene.primitives._primitives.length == 4){
+        viewer.scene.primitives._primitives.pop();
+      }
+      var coordinate = envelope.split(" ");
+      var poslist = [];
+      for(var i = 0; i < coordinate.length; i++) {
+        var intarray = coordinate[i].split(",");
+        intarray[0] *= 1;intarray[1] *= 1;intarray[2] *= 1;
+        poslist = poslist.concat(intarray);
+      }
+      createPolygonforbbox(poslist);
+      showInCesium(Gaia,[]);
+    }
+    function drawPolyline(envelope) {
+      if(viewer.scene.primitives._primitives.length == 4){
+        viewer.scene.primitives._primitives.pop();
+      }
       var coordinate = envelope.split(" ");
       var poslist = [];
       for(var i = 0; i < coordinate.length; i++) {
@@ -193,9 +262,9 @@ camera.position = Cesium.Cartesian3.fromDegrees(127.1034,37.51283,100);
 
       var qtype = document.getElementById("qtype").value; //"topp:gaia";
       //document.getElementById("qtype").value;
-      var envelope = document.getElementById("box").value; //"127.10156397,37.46185285,-100 127.10226404,37.46227915,100";
+       //"127.10156397,37.46185285,-100 127.10226404,37.46227915,100";
 
-      var request = postDataMETA1 + qtype + postDataMETA2 + envelope + postDataMETA3;
+      var request = postDataMETA1 + qtype + postDataMETA2 + FilterGeom + postDataMETA3;
 
 /*
       $.ajax({
