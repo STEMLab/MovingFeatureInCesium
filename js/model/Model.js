@@ -118,13 +118,26 @@ CellSpace.prototype.init = function(jsoncontent, maxmin_xyz) {
 	var description = jsoncontent.description;
 	if(typeof description !== 'undefined') {
 		var attribute = description.value.split(":");
-		var spacetype = attribute[0].split("=")[1];
+		var attList = [];
+		for(var i = 0;i < attribute.length;i++) {
+			attList = attList.concat(attribute[i].split("="));
+		}
+		for(var i = 0;i < attList.length;i += 2) {
+			if(attList[i] == "Usage") {
+				if(attList[i + 1] == 'Room') this.type = 1;
+				else if(attList[i + 1] == 'Corridor') this.type = 2;
+				else if(attList[i + 1] == 'Stair') this.type = 3;
+				else if(attList[i + 1] == 'Door') this.type = 4;
+			}
+			if(attList[i] == "Floor")this.floor = attList[i + 1] * 1;
+		}
+		/*var spacetype = attribute[0].split("=")[1];
 		if(spacetype == 'Room') this.type = 1;
 		else if(spacetype == 'Corridor') this.type = 2;
 		else if(spacetype == 'Stair') this.type = 3;
 		else if(spacetype == 'Door') this.type = 4;
 		if(attribute.length > 2)
-			this.floor = attribute[2].split("=")[1]*1;
+			this.floor = attribute[2].split("=")[1]*1;*/
 	}
 	var n = jsoncontent.name;
 	if(typeof n !== 'undefined') {
