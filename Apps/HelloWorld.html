@@ -199,10 +199,7 @@ camera.position = Cesium.Cartesian3.fromDegrees(127.1034,37.51283,100);
 
     var loader = new Loader();
     function drawSolid(envelope) {
-      if(viewer.scene.primitives._primitives.length == 4){
-        viewer.scene.primitives._primitives.pop();
-      }
-
+      Gaia = [];
       var coordinate = envelope.split(" ");
       var min = coordinate[0].split(",");
       min[0] *= 1;min[1] *= 1;min[2] *= 1;
@@ -230,9 +227,7 @@ camera.position = Cesium.Cartesian3.fromDegrees(127.1034,37.51283,100);
        showInCesium(Gaia,[]);
     }
     function drawPolygon(envelope) {
-      if(viewer.scene.primitives._primitives.length == 4){
-        viewer.scene.primitives._primitives.pop();
-      }
+      Gaia = [];
       var coordinate = envelope.split(" ");
       var poslist = [];
       for(var i = 0; i < coordinate.length; i++) {
@@ -244,9 +239,6 @@ camera.position = Cesium.Cartesian3.fromDegrees(127.1034,37.51283,100);
       showInCesium(Gaia,[]);
     }
     function drawPolyline(envelope) {
-      if(viewer.scene.primitives._primitives.length == 4){
-        viewer.scene.primitives._primitives.pop();
-      }
       var coordinate = envelope.split(" ");
       var poslist = [];
       for(var i = 0; i < coordinate.length; i++) {
@@ -350,6 +342,7 @@ camera.position = Cesium.Cartesian3.fromDegrees(127.1034,37.51283,100);
         }
       }
       idList = [];
+      viewer.scene.primitives._primitives.pop();
     }
 
     function readText(that){
