@@ -34,6 +34,9 @@
       }
 
   </style>-->
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
+  <script src="//code.jquery.com/jquery-1.10.2.js"></script>
+  <script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
   <style>
     @import url(Sandcastle/templates/bucket.css);
      #toolbar {
@@ -80,7 +83,9 @@
     <label style ="color:white"><input type="checkbox" id="door" checked = 'true' onchange ='changecolor(4,this.checked)'>door</label></br>
 -->
      </div>
-
+<div id="dialog" title="WFS result">
+<p id ="content"></p>
+</div>
 
 
 
@@ -253,7 +258,7 @@ camera.position = Cesium.Cartesian3.fromDegrees(127.1034,37.51283,100);
             polyline : {
                 positions : toCartesian3(poslist),
                 width : 5,
-                material : Cesium.Color.SPRINGGREEN
+                material : Cesium.Color.RED
             }
         });
       viewer.zoomTo(viewer.entities);
@@ -265,7 +270,7 @@ camera.position = Cesium.Cartesian3.fromDegrees(127.1034,37.51283,100);
        //"127.10156397,37.46185285,-100 127.10226404,37.46227915,100";
 
       var request = postDataMETA1 + qtype + postDataMETA2 + FilterGeom + postDataMETA3;
-
+      var url = document.getElementById("url").value;
 /*
       $.ajax({
           type: 'POST',
@@ -284,7 +289,7 @@ camera.position = Cesium.Cartesian3.fromDegrees(127.1034,37.51283,100);
       */
 
       var req = new XMLHttpRequest();
-      req.open("POST", "http://127.0.0.1:9090/geoserver/wfs", true);
+      req.open("POST", url, true);
       //req.setRequestHeader('User-Agent', 'XMLHTTP/1.0');
       //req.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
       //var qtype = document.getElementById("qtype").value
@@ -298,11 +303,16 @@ camera.position = Cesium.Cartesian3.fromDegrees(127.1034,37.51283,100);
             var responseJSON = JSON.parse(response);
 
             var features = responseJSON.features;
+            var length = features.length;
+            var fid = "";
             for (k in features) {
                 var f = features[k];
                 var id = f.properties.id;
                 idList.push(id);
+                fid += id + "\r\n";
             }
+            $("#content").text("number of feature : " + length + "\r\nfeatures : " + fid);
+            $( "#dialog" ).dialog();
 
             for(id in idList) {
               var polygons = HilightCell[ idList[id] ];
@@ -328,7 +338,7 @@ camera.position = Cesium.Cartesian3.fromDegrees(127.1034,37.51283,100);
           */
         }
       }
-      //req.send(request);
+      req.send(request);
     }
 
     function clearHighLight() {
