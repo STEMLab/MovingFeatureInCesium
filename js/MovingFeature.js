@@ -242,7 +242,7 @@ function makeonemft(list) {
     //if(list != "" && list !== undefined) {
         var elements = list.data[0];//list.split(',');
         mfid = elements[0];
-
+        movingfeaturewgs84 += mfid + "," + elements[1] + "," + elements[2] + ",";
       if(pre !== mfid){
         if(pre !== "") {
         
@@ -267,6 +267,7 @@ function makeonemft(list) {
         
       }
       mfp = init(elements, mfp, timeunit);
+      movingfeaturewgs84 += elements[4] + "\n";
       color = elements[4] * 1; 
       if(color == 1) {
         realcolor = Cesium.Color.WHITE;

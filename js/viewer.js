@@ -144,8 +144,8 @@ function toggleNetwork() {
   
 }
 function toCartesian3(vertices,type) {
-  if(type == 2)solidtocsv += ", ";
-  solidtocsv += "(";
+  //if(type == 2)solidtocsv += ", ";
+  //solidtocsv += "(";
   var result = [];
   
   for(var k = 0;k < vertices.length;k += 3) {
@@ -159,17 +159,19 @@ function toCartesian3(vertices,type) {
     var lat = Cesium.Math.toDegrees(carto.latitude);
 
    if(k == 0) {
+    movingfeaturewgs84 += lon + " " + lat + " " + carto.height;
     //solidtocsv += lon + " " + lat + " " + carto.height;
-    solidtocsv += vertices[k] + " " + vertices[k + 1] + " " + vertices[k + 2];
+    //solidtocsv += vertices[k] + " " + vertices[k + 1] + " " + vertices[k + 2];
    }
    else {
+    movingfeaturewgs84 += " " + lon + " " + lat + " " + carto.height + ",";
     //solidtocsv += "," + lon + " " + lat + " " + carto.height;
-    solidtocsv += "," + vertices[k] + " " + vertices[k + 1] + " " + vertices[k + 2]
+    //solidtocsv += "," + vertices[k] + " " + vertices[k + 1] + " " + vertices[k + 2]
   }
 
     result.push(finalPos);
   }
-  solidtocsv += ")";
+  //solidtocsv += ")";
   return result;
 }
 function addToPrimitive(polygons ,polylines) {

@@ -18,6 +18,8 @@ var Loader = function ( ) {
 		switch ( extension ) {
 			case 'gml': {
 				solidtocsv = "id, geom\n";
+				movingfeaturewgs84 = "@stboundedby,urn:x-ogc:def:crs:EPSG:6.6:4326,3D,50.23 9.23 0,50.31 9.27 0,2016-10-31T13:44:34Z,2012-01-17T12:49:40Z,sec\n@columns,mfidref,trajectory,\"typecode\",xsd:integer\n";
+				
 				var inlineWorkerText =
     			"self.addEventListener('message', function(e) { postMessage(e); } ,false);"
 				;
@@ -61,6 +63,8 @@ var Loader = function ( ) {
 					},
 					complete: function() {
 						complete();
+						var blob = new Blob([movingfeaturewgs84], {type: "text/plain;charset=utf-8"});
+						saveAs(blob, "MFwgs84.csv");
 					}
 				});
 				break;
