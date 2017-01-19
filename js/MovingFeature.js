@@ -312,16 +312,25 @@ function init(mf,mfp,timeunit) {
   for(var i = 0;i < 6;i++) {
     poslist[i] *= 1;
   }
-  transformCoordinates(poslist);
-  //console.log(poslist);
-  var finalPos = toCartesian3(poslist);
+  //transformCoordinates(poslist);
+  //var finalPos = toCartesian3(poslist);
+  var finalPos = [Cesium.Cartesian3.fromDegrees(poslist[0],poslist[1],poslist[2]),Cesium.Cartesian3.fromDegrees(poslist[3],poslist[4],poslist[5])]
   for(var j = 0;j < 6;j += 3) {
     /*var offset = new Cesium.Cartesian3(poslist[j]*0.1, poslist[j + 1]*0.1, poslist[j + 2]*0.1);
     var pos = Cesium.Matrix4.multiplyByPoint(ENU, offset, new Cesium.Cartesian3());
     
     var finalPos = Cesium.Ellipsoid.WGS84.cartographicToCartesian(Cesium.Cartographic.fromCartesian(pos, ellipsoid));
     Cesium.Transforms.eastNorthUpToFixedFrame(finalPos, ellipsoid);*/
-    
+
+    /*var carto  = Cesium.Ellipsoid.WGS84.cartesianToCartographic(finalPos[(j / 3)]);     
+    var lon = Cesium.Math.toDegrees(carto.longitude); 
+    var lat = Cesium.Math.toDegrees(carto.latitude);
+    if(j == 0) {
+    movingfeaturewgs84 += lon + " " + lat + " " + carto.height;
+   }
+   else {
+    movingfeaturewgs84 += " " + lon + " " + lat + " " + carto.height + ",";
+  }*/
 
     var time = Cesium.JulianDate.addSeconds(start, mf[(j / 3) + 1]*timeunit, new Cesium.JulianDate());
     //console.log(time);

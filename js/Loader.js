@@ -49,6 +49,7 @@ var Loader = function ( ) {
 			}
 			case 'csv' : {
 				var index = 0;
+				var j = 1;
 				Papa.parse(file, {
 					download: true,
 					step: function(row) {
@@ -58,13 +59,22 @@ var Loader = function ( ) {
 						}
 						else if(index > 1) {
 							makeonemft(row);
+							/*if(index % 300000 == 0) {
+								var blob = new Blob([movingfeaturewgs84], {type: "text/plain;charset=utf-8"});
+								saveAs(blob, j + "MFwgs84.csv");
+								j++;
+								movingfeaturewgs84 = null;
+								var blob = null;
+								movingfeaturewgs84 = "";
+							}*/
 						}
+
 						index ++;
 					},
 					complete: function() {
 						complete();
-						var blob = new Blob([movingfeaturewgs84], {type: "text/plain;charset=utf-8"});
-						saveAs(blob, "MFwgs84.csv");
+						//var blob = new Blob([movingfeaturewgs84], {type: "text/plain;charset=utf-8"});
+						//saveAs(blob, j + "MFwgs84.csv");
 					}
 				});
 				break;

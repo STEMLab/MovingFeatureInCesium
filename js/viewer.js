@@ -159,12 +159,10 @@ function toCartesian3(vertices,type) {
     var lat = Cesium.Math.toDegrees(carto.latitude);
 
    if(k == 0) {
-    movingfeaturewgs84 += lon + " " + lat + " " + carto.height;
     //solidtocsv += lon + " " + lat + " " + carto.height;
     //solidtocsv += vertices[k] + " " + vertices[k + 1] + " " + vertices[k + 2];
    }
    else {
-    movingfeaturewgs84 += " " + lon + " " + lat + " " + carto.height + ",";
     //solidtocsv += "," + lon + " " + lat + " " + carto.height;
     //solidtocsv += "," + vertices[k] + " " + vertices[k + 1] + " " + vertices[k + 2]
   }
