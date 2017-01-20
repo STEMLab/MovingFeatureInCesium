@@ -242,7 +242,7 @@ function makeonemft(list) {
     //if(list != "" && list !== undefined) {
         var elements = list.data[0];//list.split(',');
         mfid = elements[0];
-        movingfeaturewgs84 += mfid + "," + elements[1] + "," + elements[2] + ",";
+        //movingfeaturewgs84 += mfid + "," + elements[1] + "," + elements[2] + ",";
       if(pre !== mfid){
         if(pre !== "") {
         
@@ -267,8 +267,9 @@ function makeonemft(list) {
         
       }
       mfp = init(elements, mfp, timeunit);
-      movingfeaturewgs84 += elements[4] + "\n";
-      color = elements[4] * 1; 
+      //movingfeaturewgs84 += elements[4] + "\n";
+      color = elements[3] * 1; 
+      //color = elements[4] * 1; 
       if(color == 1) {
         realcolor = Cesium.Color.WHITE;
       }
@@ -307,15 +308,18 @@ function complete() {
 }
 function init(mf,mfp,timeunit) {
 
-  var poslist = mf[3].split(' ');
- 
-  for(var i = 0;i < 6;i++) {
+  //var poslist = mf[3].split(' ');
+
+  var poslist = mf[2].split(' ');
+  for(var i = 0;i < poslist.length;i++) {
     poslist[i] *= 1;
   }
   //transformCoordinates(poslist);
   //var finalPos = toCartesian3(poslist);
-  var finalPos = [Cesium.Cartesian3.fromDegrees(poslist[0],poslist[1],poslist[2]),Cesium.Cartesian3.fromDegrees(poslist[3],poslist[4],poslist[5])]
-  for(var j = 0;j < 6;j += 3) {
+  
+  //var finalPos = [Cesium.Cartesian3.fromDegrees(poslist[0],poslist[1],poslist[2]),Cesium.Cartesian3.fromDegrees(poslist[3],poslist[4],poslist[5])];
+  var finalPos = [Cesium.Cartesian3.fromDegrees(poslist[0],poslist[1],poslist[2])]
+  for(var j = 0;j < poslist.length;j += 3) {
     /*var offset = new Cesium.Cartesian3(poslist[j]*0.1, poslist[j + 1]*0.1, poslist[j + 2]*0.1);
     var pos = Cesium.Matrix4.multiplyByPoint(ENU, offset, new Cesium.Cartesian3());
     
@@ -331,8 +335,8 @@ function init(mf,mfp,timeunit) {
    else {
     movingfeaturewgs84 += " " + lon + " " + lat + " " + carto.height + ",";
   }*/
-
-    var time = Cesium.JulianDate.addSeconds(start, mf[(j / 3) + 1]*timeunit, new Cesium.JulianDate());
+    var time = Cesium.JulianDate.fromIso8601(mf[1]);
+    //var time = Cesium.JulianDate.addSeconds(start, mf[(j / 3) + 1]*timeunit, new Cesium.JulianDate());
     //console.log(time);
     mfp.addSample(time, finalPos[(j / 3)]);
   }
