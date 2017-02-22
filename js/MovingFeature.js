@@ -305,7 +305,6 @@ function complete() {
   console.log(new Date(Date.now()));
 }
 function init(mf,mfp,timeunit) {
-
   var poslist = mf[3].split(' ');
  
   for(var i = 0;i < 6;i++) {
