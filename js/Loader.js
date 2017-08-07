@@ -32,6 +32,8 @@ var Loader = function ( ) {
 					//console.log(data);
 					//var worker = require('webworkify')(require('./loader/IndoorGMLLoader.js'));
 					//worker.addEventListener('message', function (ev) {
+						/*var blob = new Blob([JSON.stringify(data)], {type: "text/plain;charset=utf-8"});
+						saveAs(blob, "boxs.json");*/
 					 	console.log("receive json!!");
 						console.log(new Date(Date.now()));
 						indoor = new Indoor();
